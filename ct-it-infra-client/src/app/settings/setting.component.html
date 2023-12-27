@@ -1,0 +1,51 @@
+<app-header></app-header>
+<div class="content-wrapper">
+  <mat-sidenav-container autosize>
+    <mat-sidenav #sidenav mode="side" opened="true">
+      <mat-nav-list>
+        <!-- <mat-list-item style="margin-top: 14px;" [routerLink]="'../pages/dashboard'" routerLinkActive="active"
+          (click)="removeStyle()">
+          <img src="assets/images/dashboard.png">
+          <span class="icon-text">Dashboard</span>
+        </mat-list-item> -->
+        <mat-list-item style="margin-top: 14px;" [routerLink]="'../pages/locationlist'" routerLinkActive="active" id="locationSideMenu" [ngClass]="locationActive == true? 'active activeClass': 'inActiveClass'" (click)="removeStyle()">
+          <img style="filter: invert(1);" class="location-icon" src="assets/images/location.png">
+          <span class="icon-text">Locations</span>
+        </mat-list-item>
+        <!-- <mat-list-item routerLinkActive="active">
+          <img src="assets/images/logs.png">
+          <span class="icon-text">Logs</span>
+        </mat-list-item> -->
+        <mat-expansion-panel [class.mat-elevation-z0]="true" *ngIf="settings == 'ADMIN'" dense id="settingTab"
+          routerLinkActive="active" [(expanded)]="panelOpenState">
+          <mat-expansion-panel-header style="height: 38px;"
+            [ngClass]="activeProjectIndex == true? 'activeClass': 'inActiveClass'">
+            <img id="setting" src="assets/images/settings-solid.png" [ngStyle]="{filter : invertCaret == true ? 'invert(1)' : 'invert(0)'}">
+            <span class="icon-text">Settings</span>
+            <span class="mat-expansion-indicator" style="padding-left: 15px;" *ngIf="!invertImg"></span>
+          </mat-expansion-panel-header>
+          <mat-nav-list dense>
+            <mat-list-item (click)="changeBackTab(); activeSubmenu = submenu" id={{submenu.content}}
+            [class.activeSubmenuColor]="submenu === activeSubmenu"
+            *ngFor="let submenu of submenuItems; let i=index"
+            [routerLink]="submenu.method">
+              {{submenu.content}}
+            </mat-list-item>
+          </mat-nav-list>
+        </mat-expansion-panel>
+
+        <!-- <mat-list-item routerLinkActive="active">
+          <img src="assets/images/help.png">
+          <span class="icon-text">Userguide</span>
+        </mat-list-item> -->
+
+      </mat-nav-list>
+    </mat-sidenav>
+
+
+
+  </mat-sidenav-container>
+  <div class="right-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

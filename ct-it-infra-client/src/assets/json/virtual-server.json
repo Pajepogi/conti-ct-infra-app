@@ -1,0 +1,190 @@
+{
+    "totalPages": 1,
+    "totalCount": 4,
+    "previous": 0,
+    "next": 4,
+    "data": [
+        {
+            "id": 5,
+            "loC_ID": 1,
+            "categoryID": 3,
+            "operatingSystemId": 5,
+            "patchingDayId": 2,
+            "virtualServerTypeID": 3,
+            "technicalContactID": 2,
+            "name": "test",
+            "purpose": "sample",
+            "ipAddress": "100.100.100",
+            "hdd": 500,
+            "ram": 500,
+            "cpu": "linux",
+            "category": {
+                "id": 3,
+                "name": "test",
+                "details": "test"
+            },
+            "operatingSystem": {
+                "id": 5,
+                "osName": "Wondows",
+                "osVersion": "5"
+            },
+            "patchingDay": {
+                "id": 2,
+                "dayOfWeek": 1,
+                "timeOfDay": "21:00:00",
+                "timeZone": "MNL"
+            },
+            "type": {
+                "id": 3,
+                "name": "Corporate"
+            },
+            "technicalContact": {
+                "id": 2,
+                "techContactResponsibilityID": 1,
+                "ldaP_UID": "uia84352",
+                "email": "rasiel.payumo@continental.com",
+                "techContactResponsibility": {
+                    "id": 1,
+                    "name": "LITM"
+                }
+            }
+        },
+        {
+            "id": 6,
+            "loC_ID": 1,
+            "categoryID": 3,
+            "operatingSystemId": 5,
+            "patchingDayId": 2,
+            "virtualServerTypeID": 3,
+            "technicalContactID": 2,
+            "name": "test",
+            "purpose": "sample",
+            "ipAddress": "100.100.100",
+            "hdd": 500,
+            "ram": 500,
+            "cpu": "linux",
+            "category": {
+                "id": 3,
+                "name": "test",
+                "details": "test"
+            },
+            "operatingSystem": {
+                "id": 5,
+                "osName": "Wondows",
+                "osVersion": "5"
+            },
+            "patchingDay": {
+                "id": 2,
+                "dayOfWeek": 1,
+                "timeOfDay": "21:00:00",
+                "timeZone": "MNL"
+            },
+            "type": {
+                "id": 3,
+                "name": "Corporate"
+            },
+            "technicalContact": {
+                "id": 2,
+                "techContactResponsibilityID": 1,
+                "ldaP_UID": "uia84352",
+                "email": "rasiel.payumo@continental.com",
+                "techContactResponsibility": {
+                    "id": 1,
+                    "name": "LITM"
+                }
+            }
+        },
+        {
+            "id": 7,
+            "loC_ID": 1,
+            "categoryID": 3,
+            "operatingSystemId": 5,
+            "patchingDayId": 2,
+            "virtualServerTypeID": 3,
+            "technicalContactID": 2,
+            "name": "test",
+            "purpose": "sample",
+            "ipAddress": "100.100.100",
+            "hdd": 500,
+            "ram": 500,
+            "cpu": "linux",
+            "category": {
+                "id": 3,
+                "name": "test",
+                "details": "test"
+            },
+            "operatingSystem": {
+                "id": 5,
+                "osName": "Wondows",
+                "osVersion": "5"
+            },
+            "patchingDay": {
+                "id": 2,
+                "dayOfWeek": 1,
+                "timeOfDay": "21:00:00",
+                "timeZone": "MNL"
+            },
+            "type": {
+                "id": 3,
+                "name": "Corporate"
+            },
+            "technicalContact": {
+                "id": 2,
+                "techContactResponsibilityID": 1,
+                "ldaP_UID": "uia84352",
+                "email": "rasiel.payumo@continental.com",
+                "techContactResponsibility": {
+                    "id": 1,
+                    "name": "LITM"
+                }
+            }
+        },
+        {
+            "id": 8,
+            "loC_ID": 1,
+            "categoryID": 3,
+            "operatingSystemId": 5,
+            "patchingDayId": 2,
+            "virtualServerTypeID": 3,
+            "technicalContactID": 2,
+            "name": "test",
+            "purpose": "sample",
+            "ipAddress": "100.100.100",
+            "hdd": 500,
+            "ram": 500,
+            "cpu": "linux",
+            "category": {
+                "id": 3,
+                "name": "test",
+                "details": "test"
+            },
+            "operatingSystem": {
+                "id": 5,
+                "osName": "Wondows",
+                "osVersion": "5"
+            },
+            "patchingDay": {
+                "id": 2,
+                "dayOfWeek": 1,
+                "timeOfDay": "21:00:00",
+                "timeZone": "MNL"
+            },
+            "type": {
+                "id": 3,
+                "name": "Corporate"
+            },
+            "technicalContact": {
+                "id": 2,
+                "techContactResponsibilityID": 1,
+                "ldaP_UID": "uia84352",
+                "email": "rasiel.payumo@continental.com",
+                "techContactResponsibility": {
+                    "id": 1,
+                    "name": "LITM"
+                }
+            }
+        }
+    ],
+    "pageNumber": 1,
+    "pageSize": 100
+}

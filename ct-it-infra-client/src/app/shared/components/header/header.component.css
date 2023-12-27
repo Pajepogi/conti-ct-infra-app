@@ -1,0 +1,53 @@
+.headerwrapper{
+    width: 100%;
+    background: #FEA500 0% 0% no-repeat padding-box;
+    opacity: 1;
+    height: 59px;
+    color: #FFFFFF;
+}
+
+.text2{
+    font: normal normal bold 6px/8px Nunito Sans-Bold;
+    padding-left: 50px;
+    display: block;
+    color: #000000;
+}
+
+.text1{
+    padding-left: 19px;
+    padding-top: 18px;
+}
+
+
+.headerwrapper .left-content{
+    float: left;
+    width: 200px;
+    height: 28px;
+    min-height: 28px;
+    max-width: 200px;
+}
+
+.headerwrapper .right-content{
+    float: right;
+    margin-right: 32px;
+}
+
+.logo-img {
+    padding-left: 19px;
+    padding-top:0px;
+    padding-bottom: 12px;
+    width: 100%;
+}
+
+.profile-img {
+    width: 105px;
+    padding-top: 10px;
+    height: 58px;
+}
+
+.notify-img{
+    margin-left: 15px;
+    margin-right: -48px;
+    height: 45px;
+}
+

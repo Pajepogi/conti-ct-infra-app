@@ -1,0 +1,288 @@
+<div class="phyServ-container mat-elevation-z8">
+    <div class="section">
+      <div class="left-section" data-bs-toggle="collapse" data-bs-target="#collapseSubnets" aria-expanded="false"
+        aria-controls="collapseSubnets" style="cursor: pointer;" (click)="toggle()">
+        <mat-icon *ngIf="!isExpanded">chevron_right</mat-icon>
+        <mat-icon *ngIf="isExpanded">expand_more</mat-icon> Subnets
+      </div>
+      <div class="right-section">
+        <div class="search">
+          <form (keydown)="keyDownFunction($event)">
+            <input type="text" class="inp-txt" placeholder="Search Subnets"
+               #input (input)="onInputChange($event)">
+            <mat-icon matSuffix data-bs-toggle="modal" data-bs-target="#staticBackdrop66" style="cursor: pointer;">search</mat-icon>
+          </form>
+        </div>
+        <button class="new-physical" data-bs-toggle="modal" data-bs-target="#staticBackdrop4" style="cursor:pointer" *ngIf="isLocActive != false"> + New </button>
+        <button class="new-physical disabled" *ngIf="isLocActive == false"> + New </button>
+      </div>
+    </div>
+    <div id="collapseSubnets" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+      <mat-table #table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef style="text-align:center"> Action </th>
+          <mat-cell *matCellDef="let element" class="action-link" style="text-align: center;" [ngClass]="element.pending_Approval ? 'greyedOut' : ''">
+            <img src="assets/images/edit.png" style="cursor: pointer;" (click)="editSubnetsServ(element)" *ngIf="isLocActive != false"
+            data-bs-toggle="modal" [attr.data-bs-target]="element.pending_Approval ? '#pendingForApprovalModalSubnet' : '#staticBackdrop77'">
+            <img src="assets/images/delete.png" style="margin-left: 5px;cursor: pointer;" *ngIf="isLocActive != false"
+            data-bs-toggle="modal" [attr.data-bs-target]="element.pending_Approval ? '#pendingForApprovalModalSubnet' : '#deleteSubnet'"
+        (click)="deleteSubnet(element)">
+
+        <img src="assets/images/edit.png" style="cursor: default;" *ngIf="isLocActive == false">
+        <img src="assets/images/delete.png" style="margin-left: 5px;cursor: default;" *ngIf="isLocActive == false">
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
+            <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.id}} </mat-cell>
+          </ng-container>
+
+        <ng-container matColumnDef="locationCode">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> ID Location Code </mat-header-cell>
+          <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.id_Location}} </mat-cell>
+        </ng-container>
+
+
+        <ng-container matColumnDef="subnet">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Subnet </mat-header-cell>
+          <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.subnet}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="subnetname">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Subnet Name </mat-header-cell>
+          <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{ element.subnetName }}</mat-cell>
+        </ng-container>
+
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+
+      <mat-paginator class="customPaginator" [length]="totalRows" [pageIndex]="currentPage" [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions" showFirstLastButtons (page)="pageChanged($event)">
+      </mat-paginator>
+    </div>
+  </div>
+
+  <div class="col d-flex align-items-center justify-content-center">
+    <img src="../../../assets/images/loading1.png" alt="" class="loader" *ngIf="isLoading">
+
+  </div>
+
+  <div class="modal fade" id="staticBackdrop66" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="SearchUserTxt">Search Subnets</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="clearFormOnCancel()">
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="row g-3" [formGroup]="searchSubnetForm" id="searchSubnetForms"
+            (ngSubmit)="searchSubnets()">
+            <div class="col-md-6">
+              <label for="ssubnet" class="form-label">Subnet </label>
+              <input type="text" class="form-control" name="ssubnet" id="ssubnet" autocomplete="off" formControlName="ssubnet">
+              <mat-icon matSuffix>search</mat-icon>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="searchbtn" type="button" (click)="searchSubnets()">Search</button>
+        </div>
+
+        <div *ngIf="rearchResultTable" style="margin: 20px">
+          <div>
+            <span class="searchResult createButtons"> Search Result </span>
+            <span style="float:right">
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-sliders"
+                viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                  d="M11.5 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM9.05 3a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0V3h9.05zM4.5 7a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM2.05 8a2.5 2.5 0 0 1 4.9 0H16v1H6.95a2.5 2.5 0 0 1-4.9 0H0V8h2.05zm9.45 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm-2.45 1a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0v-1h9.05z" />
+              </svg>
+            </span>
+          </div>
+          <hr style="color:grey; font-size: 10px; width: 100%;">
+
+          <mat-table #table1 [dataSource]="dataSource1" matSort>
+            <ng-container matColumnDef="action">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Action </mat-header-cell>
+              <mat-cell *matCellDef="let element" class="action-link" style="text-align: center;cursor: pointer;">
+                <input type="image"  class="inputImage"  [disabled]="element.pending_Approval" src="assets/images/edit.png" style="cursor: pointer;" (click)="editSubnetsServ(element)" data-bs-toggle="modal" data-bs-target="#staticBackdrop77" *ngIf="isLocActive != false">
+                <input type="image"  class="inputImage"  [disabled]="element.pending_Approval" src="assets/images/delete.png" style="margin-left: 5px;cursor: pointer;" *ngIf="isLocActive != false" (click)="deleteSubnet(element)">
+
+                <img src="assets/images/edit.png" style="cursor: default;" *ngIf="isLocActive == false">
+                <img src="assets/images/delete.png" style="margin-left: 5px;cursor: default;" *ngIf="isLocActive == false">
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="sid">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="sidlocationcode">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> ID Location </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.id_Location}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="ssubnet">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Subnet </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.subnet}} </mat-cell>
+            </ng-container>
+
+
+            <ng-container matColumnDef="ssubnetname">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Subnet Name </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.subnetName}} </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns1"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns1;" [ngClass]="row.pending_Approval ? 'greyedOut' : ''"></mat-row>
+          </mat-table>
+
+          <mat-paginator class="customPaginator" [length]="totalRows" [pageIndex]="currentPage" [pageSize]="pageSize"
+            [pageSizeOptions]="pageSizeOptions" showFirstLastButtons (page)="pageChanged($event)">
+          </mat-paginator>
+
+          <div class="col d-flex align-items-center justify-content-center">
+            <img src="../../../assets/images/loading1.png" alt="" class="loader" *ngIf="isLoading">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="staticBackdrop4" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="SearchUserTxt">Create Subnets</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="clearFormOnCancel()">
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="row g-3" [formGroup]="createSubnetForm" id="createSubnets"
+            (ngSubmit)="saveSubnets()">
+            <div class="col-md-6">
+              <label for="cssubnet" class="form-label">Subnet <span class="validtar">*</span></label>
+              <input type="text" class="form-control" name="cssubnet" id="cssubnet" autocomplete="off" formControlName="cssubnet">
+              <mat-icon matSuffix>search</mat-icon>
+              <div class="text-error-msg-block">
+                <small *ngIf="!cssubnet.valid && cssubnet.touched" class="validationMessage"> Subnet cannot be left blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label for="cssubnetname" class="form-label">Subnet Name <span class="validtar">*</span></label>
+              <input type="text" class="form-control" name="cssubnetname" id="cssubnetname" autocomplete="off" formControlName="cssubnetname">
+              <mat-icon matSuffix>search</mat-icon>
+              <div class="text-error-msg-block">
+                <small *ngIf="!cssubnetname.valid && cssubnetname.touched" class="validationMessage"> Subnet name cannot be left blank.
+                </small>
+              </div>
+            </div>
+
+          </form>
+        </div>
+        <div class="modal-footer">
+          <div class="createServersButtons">
+            <button class="discardbtn" type="button" id="discard" (click)="clearFormOnCancel()"  data-bs-dismiss="modal" aria-label="Close">Discard</button>
+            <button class="searchbtn" type="button" data-bs-dismiss="modal" aria-label="Close"
+              (click)="saveSubnets()" [disabled]="!createSubnetForm.valid">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="modal fade" id="staticBackdrop77" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered modal-xl">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h1 class="SearchUserTxt">Update Subnets</h1>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+        (click)="clearFormOnCancel()">
+      </button>
+    </div>
+    <div class="modal-body">
+      <form class="row g-3" [formGroup]="createSubnetForm" id="createPhysicalServers"
+        (ngSubmit)="updateSubnet()">
+        <div class="col-md-6">
+          <label for="cssubnet" class="form-label">Subnet </label>
+          <input type="text" class="form-control" name="cssubnet" id="ssubnet" autocomplete="off" formControlName="cssubnet">
+          <mat-icon matSuffix>search</mat-icon>
+          <div class="text-error-msg-block">
+            <small *ngIf="!ssubnet.valid && ssubnet.touched" class="validationMessage"> Subnet cannot be left blank.
+            </small>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label for="cssubnetname" class="form-label">Subnet Name</label>
+          <input type="text" class="form-control" name="cssubnetname" id="cssubnetname" autocomplete="off" formControlName="cssubnetname">
+          <mat-icon matSuffix>search</mat-icon>
+          <div class="text-error-msg-block">
+            <small *ngIf="!ssubnetname.valid && ssubnetname.touched" class="validationMessage"> Subnet name cannot be left blank.
+            </small>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <div class="createServersButtons">
+        <button class="discardbtn" type="button" id="discard" (click)="clearFormOnCancel()"  data-bs-dismiss="modal" aria-label="Close">Discard</button>
+        <button class="searchbtn" type="button" data-bs-dismiss="modal" aria-label="Close"
+          (click)="updateSubnet()">update</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="modal fade" id="deleteSubnet" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+       <div class="modal-title fs-5 m-auto" id="staticBackdropLabel">
+           <svg xmlns="http://www.w3.org/2000/svg" width="112" height="112" fill="#FEA500" class="bi bi-exclamation-circle mt-4 popupImage" viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+              <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+            </svg>
+        </div>
+      <div class="modal-body m-auto">
+        <p class="popupSubHeadingText">Are you sure?</p>
+        <p class="popupBodyTextMsg">You want to delete the Subnet</p>
+        <p class="popupBodyTextMsg" *ngIf="this.deleteNoteVisibility">{{ constantMessage.deleteNote }}</p>
+      </div>
+      <div class="m-auto pb-5">
+        <button type="button" class="btn popupCancelButton" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn popupConfirmButton" data-bs-dismiss="modal" (click)="deletePopupConfirmButton()">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="pendingForApprovalModalSubnet" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+       <div class="modal-title fs-5 m-auto" id="staticBackdropLabel">
+           <svg xmlns="http://www.w3.org/2000/svg" width="112" height="112" fill="#FEA500" class="bi bi-exclamation-circle mt-4 popupImage" viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+              <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+            </svg>
+        </div>
+      <div class="modal-body m-auto">
+        <p class="popupBodyTextMsg">{{ constantMessage.editNote }}</p>
+      </div>
+      <div class="m-auto pb-5">
+        <button type="button" class="btn popupCancelButton" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+  </div>
+</div>

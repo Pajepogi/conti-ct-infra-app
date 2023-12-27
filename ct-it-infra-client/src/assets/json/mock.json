@@ -1,0 +1,10 @@
+{
+    "UserId": "uia84352",
+    "RoleName": "ADMIN",
+    "Permissions": [
+      "LocationRead",
+      "LocationAdd",
+      "LocationEdit",
+      "LocationDelete"
+    ]
+  }

@@ -1,0 +1,306 @@
+<div class="cloudStorage-container mat-elevation-z8">
+  <div class="section">
+    <div class="left-section" data-bs-toggle="collapse" data-bs-target="#collapsecloudStorage" aria-expanded="false"
+      aria-controls="collapseServ" style="cursor: pointer;" (click)="toggle()">
+      <mat-icon *ngIf="!isExpanded" style="padding-left: 7px;">chevron_right</mat-icon>
+      <mat-icon *ngIf="isExpanded" style="padding-left: 7px;">expand_more</mat-icon> Cloud Storage
+    </div>
+    <div class="right-section">
+      <div class="search">
+        <form (keydown)="keyDownFunction($event)">
+          <input type="text" class="inp-txt" placeholder="Search Cloud Storage"
+           #input (input)="onInputChange($event)">
+          <mat-icon matSuffix data-bs-toggle="modal" data-bs-target="#SearchCloudStorageBackdrop" style="cursor: pointer;">search</mat-icon>
+        </form>
+      </div>
+      <button class="new-cloudStorage" [ngClass]="{'disabled' : isDisable == true}" data-bs-toggle="modal" data-bs-target="#AddcloudStorage" [disabled]="isDisable" (click)="createCloudStorage()" *ngIf="isLocActive != false"> + New </button>
+      <button class="new-cloudStorage disabled" *ngIf="isLocActive == false"> + New </button>
+    </div>
+  </div>
+  <div id="collapsecloudStorage" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+    <mat-table #table [dataSource]="dataSource" matSort>
+
+      <!-- Action Column -->
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Action </th>
+        <mat-cell *matCellDef="let element" class="action-link" style="text-align: center;">
+          <input type="image" src="assets/images/edit.png" style="cursor: pointer;" data-bs-toggle="modal" *ngIf="isLocActive != false"
+          data-bs-target="#AddcloudStorageUpdate" (click)="editLocation(element)" [disabled]="isDisable" >
+          <input type="image"src="assets/images/delete.png" style="margin-left: 5px;cursor: pointer;" data-bs-toggle="modal" *ngIf="isLocActive != false"
+            data-bs-target="#deleteCloudStorage" (click)="deleteLocation(element)"  [disabled]="isDisable" >
+
+            <img src="assets/images/edit.png" *ngIf="isLocActive == false">
+            <img src="assets/images/delete.png" style="margin-left: 5px;" *ngIf="isLocActive == false">
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="purpose">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Purpose </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.purpose}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="provider">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Provider </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.provider}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="fqdn">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> FQDN </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.fqdn}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="amountTb">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Amount TB </mat-header-cell>
+        <mat-cell  *matCellDef="let element"> {{element.amountTb}} </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+
+    <mat-paginator class="customPaginator" [length]="totalRows" [pageIndex]="currentPage" [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions" showFirstLastButtons (page)="pageChanged($event)">
+    </mat-paginator>
+  </div>
+</div>
+
+<div class="modal fade" id="deleteCloudStorage" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-title fs-5 m-auto" id="staticBackdropLabel">
+        <svg xmlns="http://www.w3.org/2000/svg" width="112" height="112" fill="#FEA500"
+          class="bi bi-exclamation-circle mt-4 popupImage" viewBox="0 0 16 16">
+          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+          <path
+            d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z" />
+        </svg>
+      </div>
+      <div class="modal-body m-auto">
+        <p class="popupSubHeadingText">Are you sure?</p>
+        <p class="popupBodyTextMsg">This Cloud Storage would be deleted</p>
+      </div>
+      <div class="m-auto pb-5">
+        <button type="button" class="btn popupCancelButton" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn popupConfirmButton" data-bs-dismiss="modal"
+          (click)="popupConfirmButton()">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="AddcloudStorage" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="list-heading left-section">
+          Create Cloud Storage
+        </div>
+      </div>
+      <div class="modal-body">
+      <form  [formGroup]="addNewCloudStorageForm" id="newSwitch" (ngSubmit)="saveCloudStorage()" novalidate>
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <label for="locationName" class="form-label">Location Name</label>
+            <input type="text" class="form-control" formControlName="locationName" id="locationName" autocomplete="off" readonly>
+          </div>
+          <div class="col-md-3">
+            <label for="name" class="form-label">Name<span class="validtar">*</span></label>
+            <input type="text" class="form-control" formControlName="name" id="name" autocomplete="off">
+          </div>
+          <div class="col-md-6">
+            <label for="purpose" class="form-label">Purpose<span class="validtar">*</span></label>
+            <input type="text" class="form-control" formControlName="purpose" id="purpose" autocomplete="off">
+            <span *ngIf="!purpose.valid && purpose.touched" class="validationMessage">
+              <span *ngIf="purpose.errors['required']">This field is required</span>
+            </span>
+          </div>
+        </div>
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <label for="provider" class="form-label">Provider<span class="validtar">*</span></label>
+            <input type="text" class="form-control" formControlName="provider" id="provider" autocomplete="off">
+          </div>
+          <div class="col-md-3">
+            <label for="fqdn" class="form-label">FQDN<span class="validtar"></span></label>
+            <input type="text" class="form-control" formControlName="fqdn" id="fqdn" autocomplete="off">
+          </div>
+          <div class="col-md-3">
+            <label for="amountTb" class="form-label">Amount TB<span class="validtar"></span></label>
+            <input type="number" class="form-control" formControlName="amountTb" id="amountTb" autocomplete="off">
+          </div>
+        </div>
+      </form>
+      </div>
+
+      <div class="modal-footer center">
+        <div class="m-auto pb-5">
+          <button type="button" class="btn popupCancelButton" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn popupConfirmButton" data-bs-dismiss="modal"
+            (click)="saveCloudStorage()" [disabled]="!addNewCloudStorageForm.valid">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="AddcloudStorageUpdate" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="list-heading left-section">
+          Update Cloud Storage
+        </div>
+      </div>
+      <div class="modal-body">
+      <form  [formGroup]="addNewCloudStorageForm" id="newSwitch" (ngSubmit)="saveCloudStorage()" novalidate>
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <label for="locationName" class="form-label">Location Name</label>
+            <input type="text" class="form-control" formControlName="locationName" id="locationName" autocomplete="off" readonly>
+          </div>
+          <div class="col-md-3">
+            <label for="name" class="form-label">Name<span class="validtar">*</span></label>
+            <input type="text" class="form-control" formControlName="name" id="name" autocomplete="off">
+          </div>
+          <div class="col-md-6">
+            <label for="purpose" class="form-label">Purpose<span class="validtar">*</span></label>
+            <input type="text" class="form-control" formControlName="purpose" id="purpose" autocomplete="off">
+            <span *ngIf="!purpose.valid && purpose.touched" class="validationMessage">
+              <span *ngIf="purpose.errors['required']">This field is required</span>
+            </span>
+          </div>
+        </div>
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <label for="provider" class="form-label">Provider<span class="validtar">*</span></label>
+            <input type="text" class="form-control" formControlName="provider" id="provider" autocomplete="off">
+          </div>
+          <div class="col-md-3">
+            <label for="fqdn" class="form-label">FQDN<span class="validtar"></span></label>
+            <input type="text" class="form-control" formControlName="fqdn" id="fqdn" autocomplete="off">
+          </div>
+          <div class="col-md-3">
+            <label for="amountTb" class="form-label">Amount TB<span class="validtar"></span></label>
+            <input type="number" class="form-control" formControlName="amountTb" id="amountTb" autocomplete="off">
+          </div>
+        </div>
+      </form>
+      </div>
+
+      <div class="modal-footer center">
+        <div class="m-auto pb-5">
+          <button type="button" class="btn popupCancelButton" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn popupConfirmButton" data-bs-dismiss="modal"
+            (click)="saveCloudStorage()" [disabled]="!addNewCloudStorageForm.valid">Update</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="SearchCloudStorageBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="SearchUserTxt"> Search Cloud Storage</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="clearFormOnCancel()">
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="row g-3" [formGroup]="searchCloudStorageForm" id="physicalServers"
+            (ngSubmit)="searchCloudStorage()">
+
+            <div class="col-md-3">
+              <label for="name" class="form-label">Name </label>
+              <input type="text" class="form-control" name="name" id="name" autocomplete="off" formControlName="name">
+              <mat-icon matSuffix>search</mat-icon>
+            </div>
+            <div class="col-md-3">
+              <label for="cloudPurpose" class="form-label">Purpose </label>
+              <input type="text" class="form-control" name="cloudPurpose" id="cloudPurpose" autocomplete="off" formControlName="cloudPurpose">
+              <mat-icon matSuffix>search</mat-icon>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="searchbtn" (click)="searchCloudStorage()">Search</button>
+        </div>
+
+        <div *ngIf="rearchResultTable" style="margin: 20px">
+          <div>
+            <span class="searchResult createButtons"> Search Result </span>
+            <span style="float:right">
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-sliders"
+                viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                  d="M11.5 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM9.05 3a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0V3h9.05zM4.5 7a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM2.05 8a2.5 2.5 0 0 1 4.9 0H16v1H6.95a2.5 2.5 0 0 1-4.9 0H0V8h2.05zm9.45 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm-2.45 1a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0v-1h9.05z" />
+              </svg>
+            </span>
+          </div>
+          <hr style="color:grey; font-size: 10px; width: 100%;">
+
+          <mat-table #table1 [dataSource]="dataSource1" matSort>
+            <ng-container matColumnDef="action">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Action </mat-header-cell>
+              <mat-cell *matCellDef="let element" class="action-link" style="text-align: center;">
+                <input type="image" src="assets/images/edit.png" style="cursor: pointer;" data-bs-toggle="modal" *ngIf="isLocActive != false"
+                data-bs-target="#AddcloudStorageUpdate" (click)="editLocation(element)">
+                <input type="image"src="assets/images/delete.png" style="margin-left: 5px;cursor: pointer;" data-bs-toggle="modal"  *ngIf="isLocActive != false"
+                  data-bs-target="#deleteCloudStorage" (click)="deleteLocation(element)" >
+
+                <img src="assets/images/edit.png" *ngIf="isLocActive == false">
+                <img src="assets/images/delete.png" style="margin-left: 5px;" *ngIf="isLocActive == false">
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="purpose">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Purpose</mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.purpose}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="provider">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Provider</mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.provider}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="fqdn">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> FQDN</mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.fqdn}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="amounttb">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> AmountTB</mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.amountTb}} </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns1"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns1;"></mat-row>
+          </mat-table>
+
+          <mat-paginator class="customPaginator" [length]="totalRows" [pageIndex]="currentPage" [pageSize]="pageSize"
+            [pageSizeOptions]="pageSizeOptions" showFirstLastButtons (page)="pageChanged($event)">
+          </mat-paginator>
+
+          <div class="col d-flex align-items-center justify-content-center">
+            <img src="../../../assets/images/loading1.png" alt="" class="loader" *ngIf="isLoading">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+

@@ -1,0 +1,154 @@
+{
+    "totalPages": 5,
+    "totalCount": 23,
+    "previous": 0,
+    "next": 23,
+    "data": [
+        {
+            "id": 9,
+            "loC_ID": 9,
+            "category_ID": 3,
+            "oS_ID": 9,
+            "patchingDay_ID": 2,
+            "name": "sample",
+            "purpose": "sample",
+            "pn": "sample",
+            "sn": "sample",
+            "model": "sample",
+            "carePackSAID": "sample",
+            "validContractThru": "2020-10-12T00:00:00",
+            "ipAddress": "123.123.123",
+            "iloip": "123.123.13",
+            "ccServerUser": true,
+            "hdd": 123,
+            "ram": 123,
+            "cpu": "test",
+            "category": {
+                "id": 3,
+                "name": "test",
+                "details": "test"
+            },
+            "operatingSystem": {
+                "id": 5,
+                "osName": "Wondows",
+                "osVersion": "5"
+            },
+            "patchingDay": {
+                "id": 2,
+                "dayOfWeek": 1,
+                "timeOfDay": "21:00:00",
+                "timeZone": "MNL"
+            }
+        },
+        {
+            "id": 9,
+            "loC_ID": 9,
+            "category_ID": 3,
+            "oS_ID": 9,
+            "patchingDay_ID": 2,
+            "name": "sample",
+            "purpose": "sample",
+            "pn": "sample",
+            "sn": "sample",
+            "model": "sample",
+            "carePackSAID": "sample",
+            "validContractThru": "2020-10-12T00:00:00",
+            "ipAddress": "123.123.123",
+            "iloip": "123.123.13",
+            "ccServerUser": true,
+            "hdd": 123,
+            "ram": 123,
+            "cpu": "test",
+            "category": {
+                "id": 3,
+                "name": "test",
+                "details": "test"
+            },
+            "operatingSystem": {
+                "id": 5,
+                "osName": "Wondows",
+                "osVersion": "5"
+            },
+            "patchingDay": {
+                "id": 2,
+                "dayOfWeek": 1,
+                "timeOfDay": "21:00:00",
+                "timeZone": "MNL"
+            }
+        },
+        {
+            "id": 9,
+            "loC_ID": 9,
+            "category_ID": 3,
+            "oS_ID": 9,
+            "patchingDay_ID": 2,
+            "name": "xxxx",
+            "purpose": "sample",
+            "pn": "sample",
+            "sn": "sample",
+            "model": "sample",
+            "carePackSAID": "sample",
+            "validContractThru": "2020-10-12T00:00:00",
+            "ipAddress": "123.123.123",
+            "iloip": "123.123.13",
+            "ccServerUser": true,
+            "hdd": 123,
+            "ram": 123,
+            "cpu": "test",
+            "category": {
+                "id": 3,
+                "name": "test",
+                "details": "test"
+            },
+            "operatingSystem": {
+                "id": 5,
+                "osName": "Wondows",
+                "osVersion": "5"
+            },
+            "patchingDay": {
+                "id": 2,
+                "dayOfWeek": 1,
+                "timeOfDay": "21:00:00",
+                "timeZone": "MNL"
+            }
+        },
+        {
+            "id": 9,
+            "loC_ID": 9,
+            "category_ID": 3,
+            "oS_ID": 9,
+            "patchingDay_ID": 2,
+            "name": "sample",
+            "purpose": "sample",
+            "pn": "sample",
+            "sn": "sample",
+            "model": "sample",
+            "carePackSAID": "zzzz",
+            "validContractThru": "2020-10-12T00:00:00",
+            "ipAddress": "123.123.123",
+            "iloip": "123.123.13",
+            "ccServerUser": true,
+            "hdd": 123,
+            "ram": 123,
+            "cpu": "test",
+            "category": {
+                "id": 3,
+                "name": "test",
+                "details": "test"
+            },
+            "operatingSystem": {
+                "id": 5,
+                "osName": "Wondows",
+                "osVersion": "5"
+            },
+            "patchingDay": {
+                "id": 2,
+                "dayOfWeek": 1,
+                "timeOfDay": "21:00:00",
+                "timeZone": "MNL"
+            }
+        }
+    ],
+    "pageNumber": 1,
+    "pageSize": 5
+}

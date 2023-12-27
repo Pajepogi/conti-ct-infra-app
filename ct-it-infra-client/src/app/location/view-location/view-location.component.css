@@ -1,0 +1,157 @@
+.list-heading {
+    font: normal normal 600 25px/34px Nunito Sans-SemiBold;
+    letter-spacing: 0px;
+    color: #FEA500;
+    padding: 13px;
+}
+
+hr {
+    margin: 1rem 0;
+    color: grey;
+    border: 0;
+    border-top: 1px solid;
+    opacity: .25;
+    width: 100%;
+    margin: auto;
+}
+
+.location-container, .physical-server, .virtual-server, .switches,
+.tape-unit, .disk-backup, .cloud-storage, .cloud-storage-container, .physical-storages, .subnets, .technical-contact
+{
+    background: #F0F0F0;
+    padding: 10px 10px;
+}
+
+.new-location {
+    width: 128px;
+    height: 38px;
+    background: #FFA500 0% 0% no-repeat padding-box;
+    text-align: center;
+    font: normal normal normal 16px/22px Nunito Sans-Regular;
+    letter-spacing: 0px;
+    border-radius: 23px;
+    opacity: 1;
+    border-width: 0;
+    margin-right: 22px;
+    margin-top: 13px;
+}
+
+.left-section {
+    float: left;
+}
+
+.right-section {
+    float: right;
+}
+
+.headBack {
+    background: #fff;
+}
+
+.form-container-box {
+    background: #fff;
+    min-height: 100%
+}
+
+#viewLoc {
+    padding: 12px;
+    ;
+}
+
+.form-control {
+    border-radius: 1.375rem;
+}
+
+label {
+    top: 0px;
+    left: 0px;
+    height: 18px;
+    text-align: left;
+    font: normal normal normal 13px/18px Nunito Sans-Regular;
+    letter-spacing: 0px;
+    color: #000000;
+    font-size: small;
+}
+
+.validtar {
+    color: red;
+}
+
+.form-control:focus {
+    border: 1px solid#FEA500;
+    box-shadow: none;
+}
+
+input.ng-invalid.ng-touched.select.ng-invalid.ng-touched {
+    border: 1px solid red;
+}
+
+select.ng-invalid.ng-touched {
+    border: 1px solid red !important;
+}
+
+input.ng-invalid.ng-touched{
+    border: 1px solid red !important;
+}
+
+.form-select {
+    border-radius: 1.375rem;
+}
+
+.form-select:focus {
+    border: 1px solid#FEA500;
+    box-shadow: none;
+}
+
+option {
+    font-size: small;
+    font-family:  Nunito Sans-Regular;
+    outline: 2px dotted red;
+    color: #000000;
+    border-radius: 25px;
+}
+
+select.form-select option:hover {
+    background-color: yellow !important;
+  }
+
+select:focus {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.alert {
+    color: #fff;
+    background-color: #FEA500;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.regionBorder {
+    border-radius: 25px 25px 0 0;
+}
+
+.validationMessage {
+    font: normal normal normal 13px/18px Nunito Sans-Regular;
+    color: #f76e6e;
+}
+
+.text-error-msg-block{
+    min-height: 10px;
+    height: 10px;
+ }
+ 
+ input[type="text"] {
+    font: small;
+    font-family:  Nunito Sans-Regular;
+}

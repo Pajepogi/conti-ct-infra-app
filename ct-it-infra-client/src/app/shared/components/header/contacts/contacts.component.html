@@ -1,0 +1,33 @@
+
+<div style="min-width: 500px;">
+  <h2 mat-dialog-title style="color:  #FFA500;text-align:center">Contact Us/Report Page</h2>
+  <mat-dialog-content [formGroup]="form" class="table-container mat-elevation-z8">
+<div>
+
+  <label for="reasonForContact" class="form-label" id="reasonForContact">Reason For Contact</label>
+  <select name="contact" id="contact" style="border: 1px solid#FEA500;border-radius: 25px;"  class="form-select dropdown-toggle" formControlName="category">
+    <option *ngFor="let item of reasonForContactsEnum" [value]="item"> {{ item }} </option>
+  </select>
+
+</div>
+
+      <br/>
+<div >
+  <label for="Details" class="form-label" id="Details">Details</label>
+  <textarea formControlName="message" #message maxlength="500" style="height: 150px;border: 1px solid#FEA500;border-radius: 25px;">
+  </textarea>
+  <mat-hint align="end">
+    {{message.value.length}} / 500
+  </mat-hint>
+</div>
+
+
+      <!-- <mat-error *ngIf="messages.errors?.minLength">
+        A minimum length of 5 characters is required.
+    </mat-error> -->
+  </mat-dialog-content >
+  <mat-dialog-actions align="end">
+    <button mat-raised-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button color="primary">Send</button>
+  </mat-dialog-actions>
+</div>

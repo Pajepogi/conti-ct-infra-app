@@ -1,0 +1,44 @@
+  <div>
+  <h2 mat-dialog-title style="color:  #FFA500;text-align:center">Pending For Approval</h2>
+  <mat-dialog-content class="table-container mat-elevation-z8">
+    <mat-table #table [dataSource]="dataSource">
+      <ng-container matColumnDef="location_name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Location</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.location_Name}} </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Resource Name </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="entityname">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Resource Type </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.entityName}} </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="requestedBy">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Requested By </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.requestedBy}} </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="operation">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Operation </mat-header-cell>
+        <mat-cell *matCellDef="let element"> Request for deletion</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="action">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <img src="assets/images/greentick.png" style="cursor: pointer;height: 25px;"   (click)="openConfirmation('APPROVE',element)">&nbsp;&nbsp;
+          <img src="assets/images/redcross.png" style="cursor: pointer;height: 25px;" (click)="openConfirmation('REJECT',element)">
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+    <mat-paginator class="customPaginator" [length]="totalRows" [pageIndex]="currentPage" [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions" showFirstLastButtons (page)="pageChanged($event)">
+    </mat-paginator>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+</mat-dialog-actions>
+ </div>
+

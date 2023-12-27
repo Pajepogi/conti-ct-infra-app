@@ -1,0 +1,8 @@
+table {
+	color: white;
+	width: 100%;
+	display: block;
+	overflow: scroll;
+	max-height: 500px;
+	font-weight: normal;
+}

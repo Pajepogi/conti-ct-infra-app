@@ -1,0 +1,543 @@
+<div class="tape-unit-container mat-elevation-z8">
+  <div class="section">
+    <div class="left-section" data-bs-toggle="collapse" data-bs-target="#collapsetape-unit" aria-expanded="false"
+      aria-controls="collapseServ" style="cursor: pointer;" (click)="toggle()">
+      <mat-icon *ngIf="!isExpanded" style="padding-left: 7px;">chevron_right</mat-icon>
+      <mat-icon *ngIf="isExpanded" style="padding-left: 7px;">expand_more</mat-icon> Tape Unit
+    </div>
+    <div class="right-section">
+      <div class="search">
+        <form (keydown)="keyDownFunction($event)">
+          <input type="text" class="inp-txt" placeholder="Search Tape Units"
+             #input (input)="onInputChange($event)">
+          <mat-icon matSuffix data-bs-toggle="modal" data-bs-target="#staticBackdropTapeUnitSearch" style="cursor: pointer;">search</mat-icon>
+        </form>
+      </div>
+      <button class="new-tape-unit" data-bs-toggle="modal" data-bs-target="#AddTapeUnit" *ngIf="isLocActive != false" (click)="createTapeUnit()"> + New </button>
+      <button class="new-tape-unit disabled" *ngIf="isLocActive == false"> + New </button>
+    </div>
+  </div>
+  <div id="collapsetape-unit" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+    <mat-table #table [dataSource]="dataSource" matSort>
+
+      <!-- Action Column -->
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Action </th>
+        <mat-cell *matCellDef="let element" class="action-link" style="text-align: center;" [ngClass]="element.pending_Approval ? 'greyedOut' : ''">
+          <img src="assets/images/edit.png" style="cursor: pointer;" data-bs-toggle="modal" *ngIf="isLocActive != false"
+          data-bs-toggle="modal" [attr.data-bs-target]="element.pending_Approval ? '#pendingForApprovalModalTape' : '#AddTapeUnitUpdate'" (click)="editLocation(element)">
+          <img src="assets/images/delete.png" style="margin-left: 5px;cursor: pointer;" data-bs-toggle="modal" *ngIf="isLocActive != false"
+           [attr.data-bs-target]="element.pending_Approval ? '#pendingForApprovalModalTape' : '#deleteTapUnit'"  (click)="deleteTapeUnit(element)">
+
+          <img src="assets/images/edit.png" *ngIf="isLocActive == false">
+          <img src="assets/images/delete.png" style="margin-left: 5px;" *ngIf="isLocActive == false">
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+        <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.name}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="connectionType">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Connection Type  </mat-header-cell>
+        <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.connectionType.name}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="firmware_Version">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Firmware Version </mat-header-cell>
+        <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.firmware_Version}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="model">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Model </mat-header-cell>
+        <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.model}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="pn">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> PN </mat-header-cell>
+        <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.pn}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="sn">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> SN </mat-header-cell>
+        <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.sn}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="carePackSAID">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Care Pack SAID</mat-header-cell>
+        <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.carePackSAID}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="validContractThru">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Valid Until </mat-header-cell>
+        <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.validContractThru | date: 'yyyy-MM-dd'}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="ipAddress">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> IP Address </mat-header-cell>
+        <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.ipAddress}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="iloip">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> ILOIP </mat-header-cell>
+        <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.iloip}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="drivers">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Drivers </mat-header-cell>
+        <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.drivers}} </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+
+    <mat-paginator class="customPaginator" [length]="totalRows" [pageIndex]="currentPage" [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions" showFirstLastButtons (page)="pageChanged($event)">
+    </mat-paginator>
+  </div>
+</div>
+
+<!-- Modal Delete -->
+<div class="modal fade" id="deleteTapUnit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-title fs-5 m-auto" id="staticBackdropLabel">
+        <!-- <img src="../../../assets/images/icon-exclamation.png" alt="" class=" mt-5 popupImage"> -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="112" height="112" fill="#FEA500"
+          class="bi bi-exclamation-circle mt-4 popupImage" viewBox="0 0 16 16">
+          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+          <path
+            d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z" />
+        </svg>
+      </div>
+      <div class="modal-body m-auto">
+        <p class="popupSubHeadingText">Are you sure?</p>
+        <p class="popupBodyTextMsg">This Tape Unit would be deleted</p>
+        <p class="popupBodyTextMsg" *ngIf="this.deleteNoteVisibility">{{ constantMessage.deleteNote }}</p>
+      </div>
+      <div class="m-auto pb-5">
+        <button type="button" class="btn popupCancelButton" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn popupConfirmButton" data-bs-dismiss="modal"
+          (click)="popupConfirmButton()">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal Add -->
+<div id="AddTapeUnit" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-xl">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="list-heading left-section">
+          Create Tape Unit
+        </div>
+      </div>
+      <div class="modal-body">
+      <form  [formGroup]="addNewTapeUnitForm" id="newTapeUnit" (ngSubmit)="saveTapeUnit()" novalidate>
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <label for="name" class="form-label">Name<span class="validtar">*</span></label>
+            <input type="text" class="form-control" formControlName="name" id="name" autocomplete="off" name="name" (keyup)="driversOnkeyup($event);">
+            <div class="text-error-msg-block">
+              <span *ngIf="!name.valid && name.touched" class="validationMessage">
+                <span *ngIf="name.errors['required']">This field is required</span>
+              </span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label for="FirmwareVersion" class="form-label">Firmware Version<span class="validtar">*</span></label>
+            <input type="text" class="form-control" formControlName="firmware_Version" id="purpose" autocomplete="off">
+            <div class="text-error-msg-block">
+            <span *ngIf="!firmware_Version.valid && firmware_Version.touched" class="validationMessage">
+              <span *ngIf="firmware_Version.errors['required']">This field is required</span>
+            </span>
+          </div>
+          </div>
+          <div class="col-md-3">
+            <label for="connectionType" class="form-label">Connection Type<span class="validtar">*</span></label>
+            <select name="connectionType" id="connectionType" class="form-select" formControlName="connectionType" name="connectionType">
+              <option *ngFor="let connectionType of connectionTypeDropdown" [ngValue]="connectionType"> {{ connectionType.name }} </option>
+            </select>
+            <div class="text-error-msg-block">
+              <span *ngIf="!connectionType.valid && connectionType.touched" class="validationMessage">
+                <span *ngIf="connectionType.errors['required']">This field is required</span>
+              </span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label for="validContractThru" class="form-label">Valid Contract Thru<span class="validtar">*</span></label>
+            <input type="date" class="form-control" formControlName="validContractThru" id="validContractThru" autocomplete="off" name="validContractThru">
+            <div class="text-error-msg-block">
+              <span *ngIf="!validContractThru.valid && validContractThru.touched" class="validationMessage">
+                <span *ngIf="validContractThru.errors['required']">This field is required</span>
+              </span>
+              </div>
+          </div>
+        </div>
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <label for="pn" class="form-label">PN<span class="validtar">*</span></label>
+            <input type="text" class="form-control" formControlName="pn" id="pn" autocomplete="off" name="pn">
+            <div class="text-error-msg-block">
+            <span *ngIf="!pn.valid && pn.touched" class="validationMessage">
+              <span *ngIf="pn.errors['required']">This field is required</span>
+            </span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label for="sn" class="form-label">SN<span class="validtar">*</span></label>
+            <input type="text" class="form-control" formControlName="sn" id="sn" autocomplete="off" name="sn">
+            <div class="text-error-msg-block">
+            <span *ngIf="!sn.valid && sn.touched" class="validationMessage">
+              <span *ngIf="sn.errors['required']">This field is required</span>
+            </span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label for="model" class="form-label">Model<span class="validtar"></span></label>
+            <input type="text" class="form-control" formControlName="model" id="model" autocomplete="off">
+          </div>
+          <div class="col-md-3">
+            <label for="carePackSAID" class="form-label">Care pack SAID<span class="validtar"></span></label>
+            <input type="text" class="form-control" formControlName="carePackSAID" id="carePackSAID" autocomplete="off">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <label for="drivers" class="form-label">Drivers<span class="validtar">*</span><span class="grayed"> (multiple drivers are separeted by comma)</span></label>
+            <input type="text" class="form-control" formControlName="drivers" id="drivers" autocomplete="off" name="drivers" (keyup)="driversOnkeyup($event);">
+            <div class="text-error-msg-block">
+            <span *ngIf="!drivers.valid && drivers.touched" class="validationMessage">
+              <span *ngIf="drivers.errors['required']">This field is required</span>
+            </span>
+            </div>
+            <div class="drivers-div" [innerHtml]="driverToAdd"></div>
+          </div>
+          <div class="col-md-3">
+            <label for="ipAddress" class="form-label">IP Address <span class="validtar">*</span></label>
+            <input type="text" class="form-control" formControlName="ipAddress" id="ipAddress1" autocomplete="off">
+            <div class="text-error-msg-block">
+            <span *ngIf="!ipAddress.valid && ipAddress.touched" class="validationMessage">
+              <span *ngIf="ipAddress.errors['required']">This field is required</span>
+            </span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label for="iloip" class="form-label">ILOIP<span class="validtar">*</span></label>
+            <input type="text" class="form-control" formControlName="iloip" id="iloip" autocomplete="off" name="iloip">
+            <div class="text-error-msg-block">
+            <span *ngIf="!iloip.valid && iloip.touched" class="validationMessage">
+              <span *ngIf="iloip.errors['required']">This field is required</span>
+            </span>
+            </div>
+          </div>
+        </div>
+      </form>
+      </div>
+      <div class="modal-footer center">
+        <div class="m-auto pb-5">
+          <br>
+          <br>
+          <button type="button" class="btn popupCancelButton" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn popupConfirmButton" data-bs-dismiss="modal"
+            (click)="saveTapeUnit()" [disabled]="!addNewTapeUnitForm.valid">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="AddTapeUnitUpdate" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-xl">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="list-heading left-section">
+          Update Tape Unit
+        </div>
+      </div>
+      <div class="modal-body">
+      <form  [formGroup]="addNewTapeUnitForm" id="newTapeUnit" (ngSubmit)="saveTapeUnit()" novalidate>
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <label for="locationName" class="form-label">Location Name</label>
+            <input type="text" class="form-control" formControlName="locationName" id="locationName" autocomplete="off" readonly>
+          </div>
+          <div class="col-md-3">
+            <label for="name" class="form-label">Name<span class="validtar">*</span></label>
+            <input type="text" class="form-control" formControlName="name" id="name" autocomplete="off" name="name">
+            <div class="text-error-msg-block">
+              <span *ngIf="!name.valid && name.touched" class="validationMessage">
+                <span *ngIf="name.errors['required']">This field is required</span>
+              </span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label for="FirmwareVersion" class="form-label">Firmware Version<span class="validtar">*</span></label>
+            <input type="text" class="form-control" formControlName="firmware_Version" id="purpose" autocomplete="off">
+            <div class="text-error-msg-block">
+            <span *ngIf="!firmware_Version.valid && firmware_Version.touched" class="validationMessage">
+              <span *ngIf="firmware_Version.errors['required']">This field is required</span>
+            </span>
+          </div>
+          </div>
+          <div class="col-md-3">
+            <label for="connectionType" class="form-label">Connection Type<span class="validtar">*</span></label>
+            <select name="connectionType" id="connectionType" class="form-select" formControlName="connectionType" name="connectionType">
+              <option *ngFor="let connectionType of connectionTypeDropdown" [ngValue]="connectionType"> {{ connectionType.name }} </option>
+            </select>
+            <div class="text-error-msg-block">
+              <span *ngIf="!connectionType.valid && connectionType.touched" class="validationMessage">
+                <span *ngIf="connectionType.errors['required']">This field is required</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <label for="model" class="form-label">Model<span class="validtar"></span></label>
+            <input type="text" class="form-control" formControlName="model" id="model" autocomplete="off">
+          </div>
+          <div class="col-md-3">
+            <label for="pn" class="form-label">PN<span class="validtar">*</span></label>
+            <input type="text" class="form-control" formControlName="pn" id="pn" autocomplete="off" name="pn">
+            <div class="text-error-msg-block">
+            <span *ngIf="!pn.valid && pn.touched" class="validationMessage">
+              <span *ngIf="pn.errors['required']">This field is required</span>
+            </span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label for="sn" class="form-label">SN<span class="validtar">*</span></label>
+            <input type="text" class="form-control" formControlName="sn" id="sn" autocomplete="off" name="sn">
+            <div class="text-error-msg-block">
+            <span *ngIf="!sn.valid && sn.touched" class="validationMessage">
+              <span *ngIf="sn.errors['required']">This field is required</span>
+            </span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label for="validContractThru" class="form-label">Valid Contract Thru<span class="validtar">*</span></label>
+            <input type="date" class="form-control" formControlName="validContractThru" id="validContractThru" autocomplete="off" name="validContractThru">
+            <div class="text-error-msg-block">
+              <span *ngIf="!validContractThru.valid && validContractThru.touched" class="validationMessage">
+                <span *ngIf="validContractThru.errors['required']">This field is required</span>
+              </span>
+              </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <label for="carePackSAID" class="form-label">Care pack SAID<span class="validtar"></span></label>
+            <input type="text" class="form-control" formControlName="carePackSAID" id="carePackSAID" autocomplete="off">
+          </div>
+          <div class="col-md-3">
+            <label for="ipAddress" class="form-label">IP Address <span class="validtar">*</span></label>
+            <input type="text" class="form-control" formControlName="ipAddress" id="ipAddress1" autocomplete="off">
+            <div class="text-error-msg-block">
+            <span *ngIf="!ipAddress.valid && ipAddress.touched" class="validationMessage">
+              <span *ngIf="ipAddress.errors['required']">This field is required</span>
+            </span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label for="iloip" class="form-label">ILOIP<span class="validtar">*</span></label>
+            <input type="text" class="form-control" formControlName="iloip" id="iloip" autocomplete="off" name="iloip">
+            <div class="text-error-msg-block">
+            <span *ngIf="!iloip.valid && iloip.touched" class="validationMessage">
+              <span *ngIf="iloip.errors['required']">This field is required</span>
+            </span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label for="drivers" class="form-label">Drivers<span class="validtar">*</span><span class="grayed"> (multiple drivers are separeted by comma)</span></label>
+            <input type="text" class="form-control" formControlName="drivers" id="drivers" autocomplete="off" name="drivers" (keyup)="driversOnkeyup($event);">
+            <div class="text-error-msg-block">
+            <span *ngIf="!drivers.valid && drivers.touched" class="validationMessage">
+              <span *ngIf="drivers.errors['required']">This field is required</span>
+            </span>
+            </div>
+            <div class="drivers-div" [innerHtml]="driverToAdd"></div>
+          </div>
+        </div>
+      </form>
+      </div>
+      <div class="modal-footer center">
+        <div class="m-auto pb-5">
+          <br>
+          <br>
+          <button type="button" class="btn popupCancelButton" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn popupConfirmButton" data-bs-dismiss="modal"
+            (click)="saveTapeUnit()" [disabled]="!addNewTapeUnitForm.valid">Update</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="staticBackdropTapeUnitSearch" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="SearchUserTxt">Search Tap Units</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="clearFormOnCancel()">
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="row g-3" [formGroup]="searchTapeUnitForm" id="searchTapeUnit"
+            (ngSubmit)="searchTapeUnit()">
+            <div class="col-md-3">
+              <label for="name" class="form-label">Name  </label>
+              <input type="text" class="form-control" name="name" id="name" autocomplete="off"
+                formControlName="name">
+              <mat-icon matSuffix>search</mat-icon>
+            </div>
+            <div class="col-md-3">
+              <label for="pn" class="form-label">PN </label>
+              <input type="text" class="form-control" name="pn" id="pn" autocomplete="off" formControlName="pn">
+              <mat-icon matSuffix>search</mat-icon>
+            </div>
+            <div class="col-md-3">
+              <label for="sn" class="form-label">SN </label>
+              <input type="text" class="form-control" name="sn" id="sn" autocomplete="off" formControlName="sn">
+              <mat-icon matSuffix>search</mat-icon>
+            </div>
+            <div class="col-md-3">
+              <label for="ipaddress" class="form-label">IP Address </label>
+              <input type="text" class="form-control" name="ipaddress" id="ipaddress" autocomplete="off"
+                formControlName="ipaddress">
+              <mat-icon matSuffix>search</mat-icon>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="searchbtn" (click)="searchTapeUnit()">Search</button>
+        </div>
+
+        <div *ngIf="rearchResultTable" style="margin: 20px">
+          <div>
+            <span class="searchResult createButtons"> Search Result </span>
+            <span style="float:right">
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-sliders"
+                viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                  d="M11.5 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM9.05 3a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0V3h9.05zM4.5 7a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM2.05 8a2.5 2.5 0 0 1 4.9 0H16v1H6.95a2.5 2.5 0 0 1-4.9 0H0V8h2.05zm9.45 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm-2.45 1a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0v-1h9.05z" />
+              </svg>
+            </span>
+          </div>
+          <hr style="color:grey; font-size: 10px; width: 100%;">
+
+          <mat-table #table1 [dataSource]="dataSource1" matSort>
+            <ng-container matColumnDef="action">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Action </mat-header-cell>
+              <mat-cell *matCellDef="let element" class="action-link" style="text-align: center;">
+                <input type="image" class="inputImage" *ngIf="isLocActive != false"  [disabled]="element.pending_Approval"  src="assets/images/edit.png" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#AddTapeUnitUpdate" (click)="editLocation(element)">
+                <input type="image" class="inputImage" *ngIf="isLocActive != false"  [disabled]="element.pending_Approval"  src="assets/images/delete.png" style="margin-left: 5px;cursor: pointer;" data-bs-toggle="modal"
+                  data-bs-target="#deleteTapUnit" (click)="deleteTapeUnit(element)">
+
+                <img src="assets/images/edit.png" *ngIf="isLocActive == false">
+                <img src="assets/images/delete.png" style="margin-left: 5px;" *ngIf="isLocActive == false">
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cname">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cconnectiontype">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Connection Type </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.connectionType.name}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cfirmwareversion">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Firmware Version </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.firmware_Version}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cmodel">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Model </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.model}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cpn">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> PN </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.pn}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="csn">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> SN </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.sn}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="ccarepacksaid">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Care Pck SAID </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.carePackSAID}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cvaliduntil">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Valid Until </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.validContractThru | date:'yyyy-MM-dd'}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cipAddress">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> IP Address </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.ipAddress}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="ciloip">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> ILOIP </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.iloip}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cdrivers">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Drivers </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.drivers}} </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns1"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns1;" [ngClass]="row.pending_Approval ? 'greyedOut' : ''"></mat-row>
+          </mat-table>
+
+          <mat-paginator class="customPaginator" [length]="totalRows" [pageIndex]="currentPage" [pageSize]="pageSize"
+            [pageSizeOptions]="pageSizeOptions" showFirstLastButtons (page)="pageChanged($event)">
+          </mat-paginator>
+
+          <div class="col d-flex align-items-center justify-content-center">
+            <img src="../../../assets/images/loading1.png" alt="" class="loader" *ngIf="isLoading">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="pendingForApprovalModalTape" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+         <div class="modal-title fs-5 m-auto" id="staticBackdropLabel">
+             <svg xmlns="http://www.w3.org/2000/svg" width="112" height="112" fill="#FEA500" class="bi bi-exclamation-circle mt-4 popupImage" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+              </svg>
+          </div>
+        <div class="modal-body m-auto">
+          <p class="popupBodyTextMsg">{{ constantMessage.editNote }}</p>
+        </div>
+        <div class="m-auto pb-5">
+          <button type="button" class="btn popupCancelButton" data-bs-dismiss="modal">Close</button>
+          </div>
+      </div>
+    </div>
+  </div>

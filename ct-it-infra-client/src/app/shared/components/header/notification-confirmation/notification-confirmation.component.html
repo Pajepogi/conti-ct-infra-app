@@ -1,0 +1,22 @@
+
+<div mat-dialog-content align="center">
+  <div class="modal-body m-auto">
+    <div class="modal-title fs-5 m-auto" id="staticBackdropLabel">
+      <!-- <img src="../../../assets/images/icon-exclamation.png" alt="" class=" mt-5 popupImage"> -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="112" height="112" fill="#FEA500"
+        class="bi bi-exclamation-circle mt-4 popupImage" viewBox="0 0 16 16">
+        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+        <path
+          d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z" />
+      </svg>
+    </div>
+    <div class="modal-body m-auto center">
+      <p class="popupSubHeadingText">Are you sure?</p>
+      <p class="popupBodyTextMsg">Do you want to {{ data.name }} this request?</p>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions align="center">
+  <button class="btn popupConfirmButton" mat-button mat-dialog-close cdkFocusInitial (click)="saveRecordDialog()">Yes</button>
+  <button class="btn popupCancelButton" mat-button mat-dialog-close (click)="closeDialog()">No</button>
+</div>

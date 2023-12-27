@@ -1,0 +1,158 @@
+<div class="location-container"  *ngIf="FormsAvailability">
+  <div class="form-container-box">
+    <div class="list-heading left-section">
+      Locations
+    </div>
+    <div class="section">
+      <div class="right-section">
+        <button class="new-location" (click)="saveLocation()">{{changeText == true ? 'Update' : 'Save'}}</button>
+      </div>
+    </div>
+    <hr>
+    <form [formGroup]="addNewLocationForm" id="newLoc" (ngSubmit)="saveLocation()">
+      <div class="row mb-4">
+        <div class="col-md-3">
+          <label for="locationcode" class="form-label">Location Code <span class="validtar">*</span></label>
+          <input type="text" class="form-control" formControlName="locationCode" id="locationcode" autocomplete="off">
+          <div class="text-error-msg-block">
+          <span *ngIf="!locationcode.valid && locationcode.touched" class="validationMessage">
+            <span *ngIf="locationcode.errors['required']"> This field is required</span>
+            <span *ngIf="locationcode.errors['minlength']"> Minimum 2 characters</span>
+            <span *ngIf="locationcode.errors['maxlength']"> Maximum 3 characters</span>
+          </span>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <label for="locationname" class="form-label">Location Name<span class="validtar">*</span></label>
+          <input type="text" class="form-control" formControlName="locationName" id="locationname" autocomplete="off">
+          <div class="text-error-msg-block">
+          <span *ngIf="!locationname.valid && locationname.touched" class="validationMessage">
+            <span *ngIf="locationname.errors['required']">This filed is required</span>
+            <span *ngIf="locationname.errors['maxlength']">Characters must notexceed 200.</span>
+          </span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label for="locationAddress" class="form-label">Location Address<span class="validtar">*</span></label>
+          <input type="text" class="form-control" formControlName="locationAddress" id="locationAddress"
+            autocomplete="off">
+            <div class="text-error-msg-block">
+            <small *ngIf="!locationaddress.valid && locationaddress.touched" class="validationMessage">
+            <span *ngIf="locationaddress.errors['required']">This filed is required</span>
+            <span *ngIf="locationaddress.errors['maxlength']">Characters must not exceed 500.</span>
+          </small>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-4">
+        <div class="col-md-3">
+          <label for="ldapdomain" class="form-label">LDAP Domain<span class="validtar">*</span></label>
+          <select name="ldapdomain" id="ldapdomain" class="form-select dropdown-toggle" formControlName="ldapDomain"
+            >
+            <option *ngFor="let ldapdomain of ldapDomain" [value]="ldapdomain"> {{ ldapdomain }} </option>
+          </select>
+          <div class="text-error-msg-block">
+          <small *ngIf="!ldapdomain.valid && ldapdomain.touched" class="validationMessage">Atleast choose one LDAP
+            Domain.</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+          <label for="ldapcontainer" class="form-label">LDAP Container<span class="validtar">*</span></label>
+          <input type="text" class="form-control" formControlName="ldapContainer" id="ldapcontainer" autocomplete="off">
+          <div class="text-error-msg-block">
+          <small *ngIf="!ldapcontainer.valid && ldapcontainer.touched" class="validationMessage"> This field is
+            required.</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+          <label for="region" class="form-label">Region<span class="validtar">*</span></label>
+          <select name="region" id="region" class="form-select" formControlName="region">
+            <option *ngFor="let region of regionsDropdown" [value]="region.id"> {{ region.name }} </option>
+          </select>
+          <div class="text-error-msg-block">
+          <small *ngIf="!region.valid && region.touched" class="validationMessage">
+            Atleast choose one region.</small>
+        </div>
+          </div>
+        <div class="col-md-3">
+          <label for="country" class="form-label">Country<span class="validtar">*</span></label>
+          <select name="country" id="country" class="form-select dropdown-toggle" formControlName="country">
+            <option *ngFor="let country of countries" [value]="country"> {{ country }} </option>
+          </select>
+          <div class="text-error-msg-block">
+          <small *ngIf="!country.valid && country.touched" class="validationMessage">
+            Atleast choose one country.</small>
+        </div>
+          </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <label for="cunumber" class="form-label">CU Number <span class="validtar">*</span></label>
+          <input type="text" class="form-control" formControlName="cuNumber" id="cunumber" autocomplete="off">
+          <div class="text-error-msg-block">
+          <small *ngIf="!cunumber.valid && cunumber.touched" class="validationMessage">
+            This field is required.</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+          <label for="ccnumber" class="form-label">CC Number<span class="validtar">*</span></label>
+          <input type="text" class="form-control" formControlName="ccNumber" id="ccnumber" autocomplete="off">
+          <div class="text-error-msg-block">
+          <small *ngIf="!ccnumber.valid && ccnumber.touched" class="validationMessage">
+            This field is required.</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+          <label for="timezone" class="form-label" id="custom">Timezone<span class="validtar">*</span></label>
+          <select name="timezone" id="timezone" class="form-select dropdown-toggle" formControlName="timeZone"
+            >
+            <option *ngFor="let timezone of timeZones" [value]="timezone"> {{ timezone }} </option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label for="bmcgroup" class="form-label">BMC Group<span class="validtar">*</span></label>
+          <input type="text" class="form-control" formControlName="bmcGroup" id="bmcgroup" autocomplete="off">
+          <div class="text-error-msg-block">
+          <small *ngIf="!bmcgroup.valid && bmcgroup.touched" class="validationMessage">
+            This field is required.</small>
+            </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+  <!-- <div class="alert alert-success" role="alert" *ngIf="formSubmitAlert">
+    <h5 class="text-center" style="margin: 0">{{message}}</h5>
+  </div> -->
+</div>
+<div class="technical-contact" *ngIf="locationId">
+  <app-technical-contacts [locationId]="locationId"></app-technical-contacts>
+</div>
+<div class="physical-server" *ngIf="locationId">
+  <app-physical-servers [locationId]="locationId"></app-physical-servers>
+</div>
+<div class="virtual-server" *ngIf="locationId">
+  <app-virtual-servers [locationId]="locationId"></app-virtual-servers>
+</div>
+<div class="physical-storages" *ngIf="locationId">
+  <app-physical-storages [locationId]="locationId"></app-physical-storages>
+</div>
+<div class="subnets" *ngIf="locationId">
+  <app-subnets [locationId]="locationId"></app-subnets>
+</div>
+<div class="switches" *ngIf="locationId">
+  <app-switches [locationId]="locationId" [locName]="locName" ></app-switches>
+</div>
+<div class="tape-unit" *ngIf="locationId">
+ <app-tape-unit [locationId]="locationId" [locName]="locName"></app-tape-unit>
+</div>
+<div class="disk-backup" *ngIf="locationId">
+  <app-disk-backup [locationId]="locationId" [locName]="locName"></app-disk-backup>
+ </div>
+ <div class="cloud-storage" *ngIf="locationId">
+  <app-cloud-storage [locationId]="locationId" [locName]="locName"></app-cloud-storage>
+ </div>
+ <div class="cloud-storage-container" *ngIf="locationId">
+  <app-cloud-storage-containers [locationId]="locationId" [locName]="locName"></app-cloud-storage-containers>
+ </div>
+

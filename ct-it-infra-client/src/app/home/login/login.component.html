@@ -1,0 +1,15 @@
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="bg-img">
+            <div class="login-content">
+                <div class="outline-border"></div>
+                <p class="heading1">Welcome to the</p>
+                <p class="heading2">CT Infrastructure Portal</p>
+                <button class="btn-login" (click)="login()" *ngIf="!loginDisplay" >Login</button>
+                <div [ngClass]="{'login-spinner rotate':IsProcessing===true}"></div>
+                <div class="sso-content">{{Message}}</div>
+            </div>   
+        </div>        
+    </div>
+</div>

@@ -1,0 +1,29 @@
+<div class="footerwrapper" *ngIf="!this.router.url.includes('footer/')">
+	<footer class="col-xs-12" role="footer">
+		<div class="left-content">
+						<ul *ngIf="this.router.url.includes('/home')">
+							<li>
+								<a routerLink="footer/app-cookie-policy">Cookie Policy</a>
+								<span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>
+							</li>
+							<li>
+								<a routerLink="footer/app-site-notice">Site Notice</a>
+								<span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>
+							</li>
+							<li>
+								<a routerLink="footer/app-legal-notice">Legal Notice</a>
+								<span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>
+							</li>
+							<li>
+								<a routerLink="footer/app-terms-conditions">Terms&Conditions</a>
+								<span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>
+							</li>
+							<li>
+								<a routerLink="footer/app-privacy-policy">Privacy Policy</a>
+							</li>
+						</ul>
+					</div>
+						<div class="right-content">&copy; 2022 ContiTech AG</div>
+			
+	</footer>
+</div>

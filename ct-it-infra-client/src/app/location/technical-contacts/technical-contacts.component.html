@@ -1,0 +1,188 @@
+
+<div class="techContact-container mat-elevation-z8" >
+    <div class="section">
+        <div class="left-section" data-bs-toggle="collapse" data-bs-target="#collapseTechContact" aria-expanded="false"
+        aria-controls="collapseTechContact" style="cursor: pointer;" (click)="toggle()">
+        <mat-icon *ngIf="!isExpanded" style="padding-left: 7px;">chevron_right</mat-icon>
+        <mat-icon *ngIf="isExpanded" style="padding-left: 7px;">expand_more</mat-icon> Contacts
+        </div>
+        <div class="right-section">
+            <button class="new-contact" data-bs-toggle="modal" data-bs-target="#technicalContactModal" *ngIf="isLocActive != false" (click)="resetAddForm()"> + New </button>
+            <button class="new-contact disabled" *ngIf="isLocActive == false"> + New </button>
+        </div>
+    </div>
+    <div id="collapseTechContact" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+    <mat-table #table [dataSource]="dataSource" matSort>
+
+        <!-- Action Column -->
+        <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef> Action </th>
+            <mat-cell *matCellDef="let element" class="action-link" style="text-align: center;">
+                <img src="assets/images/edit.png" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#technicalContactModal20" *ngIf="isLocActive != false" (click)="edit(element)">
+                <img src="assets/images/delete.png" style="margin-left: 5px;cursor: pointer;" data-bs-toggle="modal" data-bs-target="#technicalContactDeleteModal" *ngIf="isLocActive != false" (click)="deleteItem(element)">
+                
+                <img src="assets/images/edit.png" *ngIf="isLocActive == false">
+                <img src="assets/images/delete.png" style="margin-left: 5px;" *ngIf="isLocActive == false">
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="ldaP_UID">
+            <mat-header-cell *matHeaderCellDef> LDAP UID</mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.ldaP_UID}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="id" hidden>
+            <mat-header-cell *matHeaderCellDef hidden> ID</mat-header-cell>
+            <mat-cell *matCellDef="let element" hidden> {{element.id}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="email">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Mail Address </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="techContactResponsibility">
+          <mat-header-cell *matHeaderCellDef> Responsibility </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.techContactResponsibility.name}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+
+    <mat-paginator class="customPaginator" [length]="totalRows" [pageIndex]="currentPage" [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions" showFirstLastButtons (page)="pageChanged($event)">
+    </mat-paginator>
+</div>
+
+</div>
+
+<!-- Scrollable modal -->
+<div class="modal fade" id="technicalContactModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: max-content;">
+        <div class="modal-content" style="width: 1500px;">
+            <div class="tech-contact-modal">
+                <div class="form-container-box">
+                  <div class="list-heading left-section">
+                    Create Contact
+                  </div>
+                  <div class="section">
+                    <div class="right-section">
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                  </div>
+                  <hr>
+                  <form [formGroup]="technicalContactForm" class="technical-contact-form" id="technicalContactFormId" (ngSubmit)="onFormSubmit()">
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <input type="hidden" id="id" formControlName="id" />
+                            <label for="ldaP_UID" class="form-label">LDAP UID</label>
+                            <input type="text" class="form-control" formControlName="ldaP_UID" id="ldaP_UID" name="ldaP_UID" autocomplete="off">
+                            <div class="text-error-msg-block">
+                              <small *ngIf="!ldaP_UID.valid && ldaP_UID.touched" class="validationMessage"> LDAP UID cannot be left
+                                blank
+                              </small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="text" class="form-control" formControlName="email" id="email" name="email" autocomplete="off">
+                            <div class="text-error-msg-block">
+                              <small *ngIf="!email.valid && email.touched" class="validationMessage"> Email cannot be left
+                                blank
+                              </small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                          <label for="techContactResponsibility" class="form-label">Responsibility</label>
+                          <select id="techContactResponsibility" class="form-select dropdown-toggle" formControlName="techContactResponsibility" name="techContactResponsibility">
+                            <option *ngFor="let techContactResponsibility of techContactResponsibilities" [ngValue]="techContactResponsibility.id">{{ techContactResponsibility.name }}</option>
+                          </select>
+                          <div class="text-error-msg-block">
+                            <small *ngIf="!techContactResponsibility.valid && techContactResponsibility.touched" class="validationMessage"> Technical Responsibility cannot be left
+                              blank
+                            </small>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" (click)="resetForm(technicalContactForm)">Discard</button>
+                      <button type="submit" class="btn btn-save" data-bs-dismiss="modal" [disabled]="!technicalContactForm.valid">Save</button>
+                    </div>
+                  </form>
+                <!-- <div class="alert alert-success" role="alert" *ngIf="formSubmitAlert && message != ''">
+                  <h5 class="text-center" style="margin: 0" *ngIf="message != ''">{{message}}</h5>
+                </div> -->
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="modal fade" id="technicalContactModal20" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: max-content;">
+      <div class="modal-content" style="width: 1500px;">
+          <div class="tech-contact-modal">
+              <div class="form-container-box">
+                <div class="list-heading left-section">
+                  Update Contact
+                </div>
+                <div class="section">
+                  <div class="right-section">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                </div>
+                <hr>
+                <form [formGroup]="technicalContactForm" class="technical-contact-form" id="technicalContactFormId" (ngSubmit)="onFormSubmit()">
+                  <div class="row mb-4">
+                      <div class="col-md-4">
+                          <input type="hidden" id="id" formControlName="id" />
+                          <label for="ldaP_UID" class="form-label">LDAP UID</label>
+                          <input type="text" class="form-control" formControlName="ldaP_UID" id="ldaP_UID" autocomplete="off">
+                      </div>
+                      <div class="col-md-4">
+                          <label for="email" class="form-label">Email</label>
+                          <input type="text" class="form-control" formControlName="email" id="email" autocomplete="off">
+                      </div>
+                      <div class="col-md-3">
+                        <label for="techContactResponsibility" class="form-label">Responsibility</label>
+                        <select id="techContactResponsibility" class="form-select dropdown-toggle" formControlName="techContactResponsibility" appSelectOptionChange>
+                          <option *ngFor="let techContactResponsibility of techContactResponsibilities" [ngValue]="techContactResponsibility.id">{{ techContactResponsibility.name }}</option>
+                        </select>
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" (click)="resetForm(technicalContactForm)">Discard</button>
+                    <button type="submit" class="btn btn-save" data-bs-dismiss="modal">Update</button>
+                  </div>
+                </form>
+              <!-- <div class="alert alert-success" role="alert" *ngIf="formSubmitAlert && message != ''">
+                <h5 class="text-center" style="margin: 0" *ngIf="message != ''">{{message}}</h5>
+              </div> -->
+          </div>
+      </div>
+  </div>
+</div>
+</div>
+ <!-- Modal -->
+ <div class="modal fade" id="technicalContactDeleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+       <div class="modal-title fs-5 m-auto" id="staticBackdropLabel">
+           <!-- <img src="../../../assets/images/icon-exclamation.png" alt="" class=" mt-5 popupImage"> -->
+           <svg xmlns="http://www.w3.org/2000/svg" width="112" height="112" fill="#FEA500" class="bi bi-exclamation-circle mt-4 popupImage" viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+              <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+            </svg>
+        </div>
+      <div class="modal-body m-auto">
+        <p class="popupSubHeadingText">Are you sure?</p>
+        <p class="popupBodyTextMsg">This Technical Contact will be deleted.</p>
+      </div>
+      <div class="m-auto pb-5">
+        <button type="button" class="btn popupCancelButton" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn popupConfirmButton" data-bs-dismiss="modal" (click)="popupConfirmButton()">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>

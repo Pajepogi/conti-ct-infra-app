@@ -1,0 +1,100 @@
+.bg-img{
+  width: 100vw;
+  height: calc(100vh - 65px);
+  background: transparent url('/assets/images/login-bg.png') 0% 0% no-repeat padding-box;
+  opacity: 1;
+}
+
+.login-content{
+  margin: 0 auto;
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  width: 497px;
+  height: 547px;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  opacity: 1;
+}
+
+.heading1{
+  font: normal normal normal 16px/22px Nunito Sans-Regular;
+  letter-spacing: 0px;
+  color: #000000;
+  text-align: center;
+  margin-bottom: 0px;
+  padding-top: 44px;
+}
+.heading2{
+  font: normal normal normal 24px/32px Nunito Sans-Regular;
+  letter-spacing: 0px;
+  color: #FFA500;
+  text-align: center;
+  padding-bottom: 60px;
+  margin-bottom: 0px;
+}
+
+.login-spinner{
+  margin-left: 225px;
+  width: 47px;
+  height: 47px;
+  background: transparent url('/assets/images/login-spinner.png') 0% 0% no-repeat padding-box;
+  opacity: 1;
+}
+
+.sso-content{
+  margin-left: 152px;
+  width: 194px;
+  height: 22px;
+  text-align: center;
+  font: normal normal normal 16px/22px Nunito Sans-Regular;
+  letter-spacing: 0px;
+  color: #000000;
+  opacity: 1;
+  padding-top: 10px;
+}
+
+.rotate {
+  animation: rotation 2s infinite linear;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+.or-content {
+  margin-top: 34px;
+  margin-bottom: 25px;
+  margin-left: 237px;
+  width: 23px;
+  height: 22px;
+  text-align: left;
+  font: normal normal normal 16px/22px Nunito Sans-Regular;
+  letter-spacing: 0px;
+  color: #000000;
+  text-transform: uppercase;
+  opacity: 1;
+}
+
+.btn-login{
+  margin-left: 154px;
+  width: 189px;
+  height: 38px;
+  background: #FFA500 0% 0% no-repeat padding-box;
+  border-color: #FFA500;
+  border-radius: 23px;
+  opacity: 1;
+  border-width: 0px;
+  font: normal normal normal 16px/22px Nunito Sans-Regular;
+}
+
+.outline-border {
+  background-color: #FFA500;
+  height: 6px;
+}

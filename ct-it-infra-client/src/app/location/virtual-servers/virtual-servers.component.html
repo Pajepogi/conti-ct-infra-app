@@ -1,0 +1,567 @@
+<div class="virServ-container mat-elevation-z8">
+  <div class="section">
+    <div class="left-section" data-bs-toggle="collapse" data-bs-target="#collapseVirtualServ" aria-expanded="false"
+      aria-controls="collapseVirtualServ" style="cursor: pointer;" (click)="toggle()">
+      <mat-icon *ngIf="!isExpanded" style="padding-left: 7px;">chevron_right</mat-icon>
+      <mat-icon *ngIf="isExpanded" style="padding-left: 7px;">expand_more</mat-icon> Virtual Servers
+    </div>
+    <div class="right-section">
+      <div class="search">
+        <form (keydown)="keyDownFunction($event)">
+          <input type="text" class="inp-txt" placeholder="Search Virtual Servers"
+             #input (input)="onInputChange($event)">
+          <mat-icon matSuffix data-bs-toggle="modal" data-bs-target="#virtualServerSearch" style="cursor: pointer;">search</mat-icon>
+        </form>
+      </div>
+      <button class="new-virtual" data-bs-toggle="modal" data-bs-target="#virtualServerModal" *ngIf="isLocActive != false" (click)="resetAddForm()"> + New </button>
+      <button class="new-virtual disabled" *ngIf="isLocActive == false"> + New </button>
+    </div>
+  </div>
+  <div id="collapseVirtualServ" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+    <mat-table #table [dataSource]="dataSource" matSort>
+
+      <!-- Action Column -->
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef> Action </th>
+        <mat-cell *matCellDef="let element" class="action-link" style="text-align: center;" [ngClass]="element.pending_Approval ? 'greyedOut' : ''">
+          <img src="assets/images/edit.png" style="cursor: pointer;" data-bs-toggle="modal" *ngIf="isLocActive != false"
+           [attr.data-bs-target]="element.pending_Approval ? '#pendingForApprovalModalVS' : '#virtualServerModalEdit' " (click)="editVirtualServer(element)">
+          <img src="assets/images/delete.png" style="margin-left: 5px;cursor: pointer;" data-bs-toggle="modal" *ngIf="isLocActive != false"
+            data-bs-target="#deleteVSModal"  [attr.data-bs-target]="element.pending_Approval ? '#pendingForApprovalModalVS' : '#deleteVSModal' "   (click)="deleteVirtualServer(element)">
+
+          <img src="assets/images/edit.png" *ngIf="isLocActive == false">
+          <img src="assets/images/delete.png" style="margin-left: 5px;" *ngIf="isLocActive == false">
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="loC_ID">
+        <mat-header-cell *matHeaderCellDef hidden> Location Code</mat-header-cell>
+        <mat-cell *matCellDef="let element" hidden> {{element.loC_ID}} </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="category">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Category </mat-header-cell>
+        <mat-cell *matCellDef="let element"  [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.category.name}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="osVersion">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> OS & Version </mat-header-cell>
+        <mat-cell *matCellDef="let element"  [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.operatingSystem.osName + ' ' + element.operatingSystem.osVersion}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="patchingDate">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Patching Date </mat-header-cell>
+        <mat-cell *matCellDef="let element"  [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{ weekDay[element.patchingDay.dayOfWeek] }}
+          {{element.patchingDay.timeOfDay + ' ' + element.patchingDay.timeZone}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+        <mat-cell *matCellDef="let element"  [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.name}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="purpose">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Purpose </mat-header-cell>
+        <mat-cell *matCellDef="let element"  [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.purpose}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Type </mat-header-cell>
+        <mat-cell *matCellDef="let element"  [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.type.name}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="ipAddress">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> IP Address </mat-header-cell>
+        <mat-cell *matCellDef="let element"  [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.ipAddress}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="ram">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> RAM (GB) </mat-header-cell>
+        <mat-cell *matCellDef="let element"  [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.ram}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="hdd">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> HDD (GB)</mat-header-cell>
+        <mat-cell *matCellDef="let element"  [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.hdd}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="cpu">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> CPU </mat-header-cell>
+        <mat-cell *matCellDef="let element"  [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.cpu}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="technicalContact">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Technical Responsibility </mat-header-cell>
+        <mat-cell *matCellDef="let element"  [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.technicalContact.techContactResponsibility.name}} </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+
+    <mat-paginator class="customPaginator" [length]="totalRows" [pageIndex]="currentPage" [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions" showFirstLastButtons (page)="pageChanged($event)">
+    </mat-paginator>
+  </div>
+
+</div>
+
+<!-- Scrollable modal -->
+<div class="modal fade" id="virtualServerModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false"
+  tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: max-content;">
+    <div class="modal-content" style="width: 1500px;">
+      <div class="virtual-server">
+        <div class="form-container-box">
+          <div class="list-heading left-section">
+            Create Virtual Servers
+          </div>
+          <div class="section">
+            <div class="right-section">
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+          </div>
+          <hr>
+          <form [formGroup]="addVirtualServerForm" class="virtual-server-form" id="newVirtualServer"
+            (ngSubmit)="onFormSubmit()">
+            <div class="row mb-4">
+              <div class="col-md-3">
+                <input type="hidden" id="locId" name="locId" [value]="locId" />
+                <label for="category" class="form-label">Category <span class="validtar">*</span></label>
+                <select id="category" name="category" class="form-select dropdown-toggle" formControlName="category">
+                  <option *ngFor="let category of categories" [ngValue]="category.id">{{ category.name }}</option>
+                </select>
+                <div class="text-error-msg-block">
+                  <small *ngIf="!category.valid && category.touched" class="validationMessage">Atleast choose one
+                    category.</small>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="osVersion" class="form-label">OS & Version<span class="validtar">*</span></label>
+                <select name="osVersion" id="osVersion" class="form-select dropdown-toggle" formControlName="osVersion">
+                  <option *ngFor="let osVersion of osVersions" [ngValue]="osVersion.id">{{ osVersion.osName + ' ' + osVersion.osVersion }}</option>
+                </select>
+                <div class="text-error-msg-block">
+                  <small *ngIf="!osVersion.valid && osVersion.touched" class="validationMessage">Atleast choose one
+                    OS.</small>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="patchingDay" class="form-label">Patching Date<span class="validtar">*</span></label>
+                <select name="patchingDay" id="patchingDay" class="form-select dropdown-toggle"
+                  formControlName="patchingDay">
+                  <option *ngFor="let patchingDay of patchingDays" [ngValue]="patchingDay.id">{{ weekDay[patchingDay.dayOfWeek]
+                    }} {{ patchingDay.timeOfDay + ' ' + patchingDay.timeZone}}</option>
+                </select>
+                <div class="text-error-msg-block">
+                  <small *ngIf="!patchingDay.valid && patchingDay.touched" class="validationMessage">Atleast choose one
+                    patching day.</small>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="technicalContact" class="form-label">Technical Contacts</label>
+                <select name="technicalContact" id="technicalContact" class="form-select dropdown-toggle"
+                  formControlName="technicalContact" name="technicalContact">
+                  <option *ngFor="let technicalContact of technicalContacts" [ngValue]="technicalContact.id">{{
+                    technicalContact.ldaP_UID }}</option>
+                </select>
+                <div class="text-error-msg-block">
+                  <small *ngIf="!technicalContact.valid && technicalContact.touched" class="validationMessage">Atleast
+                    choose one Contact day.</small>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-4">
+              <div class="col-md-3">
+                <label for="name" class="form-label">Name<span class="validtar">*</span></label>
+                <input type="text" class="form-control" formControlName="name" id="nameForm" autocomplete="off"
+                  name="name">
+                <div class="text-error-msg-block">
+                  <small *ngIf="!name.valid && name.touched" class="validationMessage"> This field is required.</small>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="purpose" class="form-label">Purpose<span class="validtar">*</span></label>
+                <input type="text" class="form-control" formControlName="purpose" id="purpose" autocomplete="off"
+                  name="purpose">
+                <div class="text-error-msg-block">
+                  <small *ngIf="!purpose.valid && purpose.touched" class="validationMessage" class="validationMessage">
+                    This field is required.</small>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="type" class="form-label">Type<span class="validtar">*</span></label>
+                <select name="type" id="type" class="form-select dropdown-toggle" formControlName="type">
+                  <option *ngFor="let type of vsTypes" [ngValue]="type.id">{{ type.name }} </option>
+                </select>
+                <div class="text-error-msg-block">
+                  <small *ngIf="!type.valid && type.touched" class="validationMessage">Atleast choose one type.</small>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="ipAddress" class="form-label">Ip Address<span class="validtar">*</span></label>
+                <input type="text" class="form-control" formControlName="ipAddress" id="ipAddress" autocomplete="off"
+                  name="ipAddress">
+                <div class="text-error-msg-block">
+                  <small *ngIf="!ipAddress.valid && ipAddress.touched" class="validationMessage"
+                    class="validationMessage"> This field is required.</small>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <label for="hdd" class="form-label">HDD (GB)</label>
+                <input type="number" class="form-control" formControlName="hdd" id="hdd" autocomplete="off" name="hdd">
+                <div class="text-error-msg-block">
+                  <small *ngIf="!hdd.valid && hdd.touched" class="validationMessage" class="validationMessage"> This
+                    field is required.</small>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="ram" class="form-label">RAM (GB)</label>
+                <input type="number" class="form-control" formControlName="ram" id="ram" autocomplete="off" name="ram">
+                <div class="text-error-msg-block">
+                  <small *ngIf="!ram.valid && ram.touched" class="validationMessage" class="validationMessage"> This
+                    field is required.</small>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="cpu" class="form-label">CPU</label>
+                <input type="text" class="form-control" formControlName="cpu" id="cpu" autocomplete="off" name="cpu">
+                <div class="text-error-msg-block">
+                  <small *ngIf="!cpu.valid && cpu.touched" class="validationMessage" class="validationMessage"> This
+                    field is required.</small>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Discard</button>
+              <button type="submit" class="btn btn-save" data-bs-dismiss="modal">Save</button>
+            </div>
+          </form>
+          <!-- <div class="alert alert-success" role="alert" *ngIf="formSubmitAlert && message != ''">
+            <h5 class="text-center" style="margin: 0" *ngIf="message != ''">{{message}}</h5>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="virtualServerModalEdit" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false"
+  tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: max-content;">
+    <div class="modal-content" style="width: 1500px;">
+      <div class="virtual-server">
+        <div class="form-container-box">
+          <div class="list-heading left-section">
+            Update Virtual Servers
+          </div>
+          <div class="section">
+            <div class="right-section">
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+          </div>
+          <hr>
+          <form [formGroup]="addVirtualServerForm" class="virtual-server-form" id="newVirtualServer"
+            (ngSubmit)="onFormSubmit()">
+            <div class="row mb-4">
+              <div class="col-md-3">
+                <input type="hidden" id="locId" name="locId" [value]="locId" />
+                <label for="category" class="form-label">Category <span class="validtar">*</span></label>
+                <select id="category" name="category" class="form-select dropdown-toggle" formControlName="category">
+                  <option *ngFor="let category of categories" [ngValue]="category.id">{{ category.name }}</option>
+                </select>
+                <div class="text-error-msg-block">
+                  <small *ngIf="!category.valid && category.touched" class="validationMessage">Atleast choose one
+                    category.</small>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="osVersion" class="form-label">OS & Version<span class="validtar">*</span></label>
+                <select name="osVersion" id="osVersion" class="form-select dropdown-toggle" formControlName="osVersion">
+                  <option *ngFor="let osVersion of osVersions" [ngValue]="osVersion.id">{{ osVersion.osName + ' ' + osVersion.osVersion }}</option>
+                </select>
+                <div class="text-error-msg-block">
+                  <small *ngIf="!osVersion.valid && osVersion.touched" class="validationMessage">Atleast choose one
+                    OS.</small>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="patchingDay" class="form-label">Patching Date<span class="validtar">*</span></label>
+                <select name="patchingDay" id="patchingDay" class="form-select dropdown-toggle"
+                  formControlName="patchingDay">
+                  <option *ngFor="let patchingDay of patchingDays" [ngValue]="patchingDay.id">{{ weekDay[patchingDay.dayOfWeek]
+                    }} {{ patchingDay.timeOfDay + ' ' + patchingDay.timeZone }}</option>
+                </select>
+                <div class="text-error-msg-block">
+                  <small *ngIf="!patchingDay.valid && patchingDay.touched" class="validationMessage">Atleast choose one
+                    patching day.</small>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="technicalContact" class="form-label">Technical Contacts</label>
+                <select name="technicalContact" id="technicalContact" class="form-select dropdown-toggle"
+                  formControlName="technicalContact" name="technicalContact">
+                  <option *ngFor="let technicalContact of technicalContacts" [ngValue]="technicalContact.id">{{
+                    technicalContact.ldaP_UID }}</option>
+                </select>
+                <div class="text-error-msg-block">
+                  <small *ngIf="!technicalContact.valid && technicalContact.touched" class="validationMessage">Atleast
+                    choose one Contact day.</small>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-4">
+              <div class="col-md-3">
+                <label for="name" class="form-label">Name<span class="validtar">*</span></label>
+                <input type="text" class="form-control" formControlName="name" id="nameForm" autocomplete="off"
+                  name="name">
+                <div class="text-error-msg-block">
+                  <small *ngIf="!name.valid && name.touched" class="validationMessage"> This field is required.</small>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="purpose" class="form-label">Purpose<span class="validtar">*</span></label>
+                <input type="text" class="form-control" formControlName="purpose" id="purpose" autocomplete="off"
+                  name="purpose">
+                <div class="text-error-msg-block">
+                  <small *ngIf="!purpose.valid && purpose.touched" class="validationMessage" class="validationMessage">
+                    This field is required.</small>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="type" class="form-label">Type<span class="validtar">*</span></label>
+                <select name="type" id="type" class="form-select dropdown-toggle" formControlName="type">
+                  <option *ngFor="let type of vsTypes" [ngValue]="type.id">{{ type.name }} </option>
+                </select>
+                <div class="text-error-msg-block">
+                  <small *ngIf="!type.valid && type.touched" class="validationMessage">Atleast choose one type.</small>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="ipAddress" class="form-label">Ip Address<span class="validtar">*</span></label>
+                <input type="text" class="form-control" formControlName="ipAddress" id="ipAddress" autocomplete="off"
+                  name="ipAddress">
+                <div class="text-error-msg-block">
+                  <small *ngIf="!ipAddress.valid && ipAddress.touched" class="validationMessage"
+                    class="validationMessage"> This field is required.</small>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <label for="hdd" class="form-label">HDD (GB)</label>
+                <input type="number" class="form-control" formControlName="hdd" id="hdd" name="hdd">
+                <div class="text-error-msg-block">
+                  <small *ngIf="!hdd.valid && hdd.touched" class="validationMessage" class="validationMessage"> This
+                    field is required.</small>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="ram" class="form-label">RAM (GB)</label>
+                <input type="number" class="form-control" formControlName="ram" id="ram" ame="ram">
+                <div class="text-error-msg-block">
+                  <small *ngIf="!ram.valid && ram.touched" class="validationMessage" class="validationMessage"> This
+                    field is required.</small>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="cpu" class="form-label">CPU</label>
+                <input type="text" class="form-control" formControlName="cpu" id="cpu" autocomplete="off" name="cpu">
+                <div class="text-error-msg-block">
+                  <small *ngIf="!cpu.valid && cpu.touched" class="validationMessage" class="validationMessage"> This
+                    field is required.</small>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Discard</button>
+              <button type="submit" class="btn btn-save" data-bs-dismiss="modal">Update</button>
+            </div>
+          </form>
+          <!-- <div class="alert alert-success" role="alert" *ngIf="formSubmitAlert && message != ''">
+            <h5 class="text-center" style="margin: 0" *ngIf="message != ''">{{message}}</h5>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Delete -->
+<div class="modal fade" id="deleteVSModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabelVS" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-title fs-5 m-auto" id="staticBackdropLabelVS">
+        <!-- <img src="../../../assets/images/icon-exclamation.png" alt="" class=" mt-5 popupImage"> -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="112" height="112" fill="#FEA500"
+          class="bi bi-exclamation-circle mt-4 popupImage" viewBox="0 0 16 16">
+          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+          <path
+            d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z" />
+        </svg>
+      </div>
+      <div class="modal-body m-auto">
+        <p class="popupSubHeadingText">Are you sure?</p>
+        <p class="popupBodyTextMsg">This Virtual Server would be deleted</p>
+        <p class="popupBodyTextMsg" *ngIf="this.deleteNoteVisibility">{{ constantMessage.deleteNote }}</p>
+      </div>
+      <div class="m-auto pb-5">
+        <button type="button" class="btn popupCancelButton" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn popupConfirmButton" data-bs-dismiss="modal"
+          (click)="popupConfirmButton()">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="virtualServerSearch" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="SearchUserTxt">Search Virtual Servers</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="clearFormOnCancel()">
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="row g-3" [formGroup]="searchVirtualServerForm" id="physicalServers"
+            (ngSubmit)="searchVirtualServers()">
+            <div class="col-md-3">
+              <label for="name" class="form-label">Name  </label>
+              <input type="text" class="form-control" name="name" id="name" autocomplete="off"
+                formControlName="name">
+              <mat-icon matSuffix>search</mat-icon>
+            </div>
+            <div class="col-md-3">
+              <label for="osName" class="form-label">OS Name </label>
+              <input type="text" class="form-control" name="osName" id="osName" autocomplete="off" formControlName="osName">
+              <mat-icon matSuffix>search</mat-icon>
+            </div>
+            <div class="col-md-3">
+              <label for="categoryName" class="form-label">Category Name </label>
+              <input type="text" class="form-control" name="categoryName" id="categoryName" autocomplete="off" formControlName="categoryName">
+              <mat-icon matSuffix>search</mat-icon>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="searchbtn" (click)="searchVirtualServers()">Search</button>
+        </div>
+
+        <div *ngIf="rearchResultTable" style="margin: 20px">
+          <div>
+            <span class="searchResult createButtons"> Search Result </span>
+            <span style="float:right">
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-sliders"
+                viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                  d="M11.5 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM9.05 3a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0V3h9.05zM4.5 7a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM2.05 8a2.5 2.5 0 0 1 4.9 0H16v1H6.95a2.5 2.5 0 0 1-4.9 0H0V8h2.05zm9.45 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm-2.45 1a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0v-1h9.05z" />
+              </svg>
+            </span>
+          </div>
+          <hr style="color:grey; font-size: 10px; width: 100%;">
+
+          <mat-table #table1 [dataSource]="dataSource1" matSort>
+            <ng-container matColumnDef="action">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Action </mat-header-cell>
+              <mat-cell *matCellDef="let element" class="action-link" style="text-align: center;" [ngClass]="element.pending_Approval ? 'greyedOut' : ''" >
+                <input type="image" src="assets/images/edit.png" style="cursor: pointer;" data-bs-toggle="modal" *ngIf="isLocActive != false"
+                  data-bs-target="#virtualServerModalEdit" [disabled]="element.pending_Approval" (click)="editVirtualServer(element)">
+                <input type="image" src="assets/images/delete.png" [disabled]="element.pending_Approval" style="margin-left: 5px;cursor: pointer;" data-bs-toggle="modal" *ngIf="isLocActive != false"
+                  data-bs-target="#deleteVSModal" (click)="deleteVirtualServer(element)">
+
+                <img src="assets/images/edit.png" *ngIf="isLocActive == false">
+                <img src="assets/images/delete.png" style="margin-left: 5px;" *ngIf="isLocActive == false">
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="ccategory">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Category </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.category.name}} </mat-cell>
+            </ng-container>
+
+
+            <ng-container matColumnDef="cosVersion">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> OS & Version </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.operatingSystem.osName + ' ' + element.operatingSystem.osVersion }} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cpatchingDay">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Patching Date </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{ weekDay[element.patchingDay.dayOfWeek] }} {{element.patchingDay.timeOfDay + ' ' + element.patchingDay.timeZone}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cname">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+            </ng-container>
+
+
+            <ng-container matColumnDef="cpurpose">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Purpose </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.purpose}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="ctype">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Type </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.type.name}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cipAddresss">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> IP Address </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.ipAddress}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cram">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> RAM (GB) </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.ram}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="chdd">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> HDD (GB) </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.hdd}} </mat-cell>
+            </ng-container>
+
+
+            <ng-container matColumnDef="ccpu">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> CPU </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.cpu}} </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns1"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns1;" [ngClass]="row.pending_Approval ? 'greyedOut' : ''"></mat-row>
+          </mat-table>
+
+          <mat-paginator class="customPaginator" [length]="totalRows" [pageIndex]="currentPage" [pageSize]="pageSize"
+            [pageSizeOptions]="pageSizeOptions" showFirstLastButtons (page)="pageChanged($event)">
+          </mat-paginator>
+
+          <div class="col d-flex align-items-center justify-content-center">
+            <img src="../../../assets/images/loading1.png" alt="" class="loader" *ngIf="isLoading">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="pendingForApprovalModalVS" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+         <div class="modal-title fs-5 m-auto" id="staticBackdropLabel">
+             <svg xmlns="http://www.w3.org/2000/svg" width="112" height="112" fill="#FEA500" class="bi bi-exclamation-circle mt-4 popupImage" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+              </svg>
+          </div>
+        <div class="modal-body m-auto">
+          <p class="popupBodyTextMsg">{{ constantMessage.editNote }}</p>
+        </div>
+        <div class="m-auto pb-5">
+          <button type="button" class="btn popupCancelButton" data-bs-dismiss="modal">Close</button>
+          </div>
+      </div>
+    </div>
+  </div>

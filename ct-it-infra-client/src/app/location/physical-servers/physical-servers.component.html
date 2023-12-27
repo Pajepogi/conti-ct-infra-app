@@ -1,0 +1,698 @@
+<div class="phyServ-container mat-elevation-z8">
+    <div class="section">
+      <div class="left-section" data-bs-toggle="collapse" data-bs-target="#collapseServ" aria-expanded="false"
+        aria-controls="collapseServ" style="cursor: pointer;" (click)="toggle()">
+        <mat-icon *ngIf="!isExpanded" style="padding-left: 7px;">chevron_right</mat-icon>
+        <mat-icon *ngIf="isExpanded" style="padding-left: 7px;">expand_more</mat-icon> Physical Servers
+      </div>
+      <div class="right-section">
+        <div class="search">
+          <form (keydown)="keyDownFunction($event)">
+            <input type="text" class="inp-txt" placeholder="Search Physical Servers"
+               #input (input)="onInputChange($event)">
+            <mat-icon matSuffix data-bs-toggle="modal" data-bs-target="#staticBackdrop99" style="cursor: pointer;">search</mat-icon>
+          </form>
+        </div>
+        <button class="new-physical" data-bs-toggle="modal" data-bs-target="#staticBackdrop1" style="cursor:pointer" *ngIf="isLocActive != false"> + New </button>
+        <button class="new-physical disabled" *ngIf="isLocActive == false"> + New </button>
+      </div>
+    </div>
+    <div id="collapseServ" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+      <mat-table #table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef style="text-align:center;"> Action </th>
+          <mat-cell *matCellDef="let element" class="action-link" style="text-align: center;" [ngClass]="element.pending_Approval ? 'greyedOut' : ''">
+            <img src="assets/images/edit.png" style="cursor: pointer;" *ngIf="isLocActive != false" (click)="editPhyServ(element)" data-bs-toggle="modal" [attr.data-bs-target]="element.pending_Approval ? '#pendingForApprovalModal' : '#staticBackdrop11'">
+            <img src="assets/images/delete.png" style="margin-left: 5px;cursor: pointer;" *ngIf="isLocActive != false" data-bs-toggle="modal" [attr.data-bs-target]="element.pending_Approval ? '#pendingForApprovalModal' : '#staticBackdrop2'" (click)="deletePhysicalServer(element)">
+
+            <img src="assets/images/edit.png" *ngIf="isLocActive == false">
+            <img src="assets/images/delete.png" style="margin-left: 5px;" *ngIf="isLocActive == false">
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="category">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Category </mat-header-cell>
+          <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.category.name}} </mat-cell>
+        </ng-container>
+
+
+        <ng-container matColumnDef="osVersion">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> OS & Version </mat-header-cell>
+          <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.operatingSystem.osName + ' ' + element.operatingSystem.osVersion}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="patchingDate">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Patching Date </mat-header-cell>
+          <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{ weekDay[element.patchingDay.dayOfWeek] }}
+            {{element.patchingDay.timeOfDay + ' ' + element.patchingDay.timeZone}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+          <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.name}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="pn">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> PN </mat-header-cell>
+          <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.pn}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="sn">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> SN </mat-header-cell>
+          <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.sn}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="model">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Model </mat-header-cell>
+          <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.model}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="carePack">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Care Pack SAID</mat-header-cell>
+          <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.carePackSAID}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="validUntil">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Valid Until </mat-header-cell>
+          <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.validContractThru}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="ipAddr">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> IP Address </mat-header-cell>
+          <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.ipAddress}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="iLoip">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> ILOIP </mat-header-cell>
+          <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.iloip}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="ccServerUser">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> CCServer User </mat-header-cell>
+          <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.ccServerUser}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="hdd">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> HDD (GB) </mat-header-cell>
+          <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.hdd}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="ram">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> RAM (GB) </mat-header-cell>
+          <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.ram}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="cpu">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> CPU </mat-header-cell>
+          <mat-cell *matCellDef="let element" [ngClass]="element.pending_Approval ? 'greyedOut' : ''"> {{element.cpu}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+
+      <mat-paginator class="customPaginator" [length]="totalRows" [pageIndex]="currentPage" [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions" showFirstLastButtons (page)="pageChanged($event)">
+      </mat-paginator>
+    </div>
+  </div>
+
+  <div class="col d-flex align-items-center justify-content-center">
+    <img src="../../../assets/images/loading1.png" alt="" class="loader" *ngIf="isLoading">
+
+  </div>
+
+
+  <div class="modal fade" id="staticBackdrop99" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="SearchUserTxt">Search Physical Servers</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="clearFormOnCancel()">
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="row g-3" [formGroup]="searchPhysicalServerForm" id="physicalServers"
+            (ngSubmit)="searchPhysicalServers()">
+            <div class="col-md-3">
+              <label for="name" class="form-label">Name  </label>
+              <input type="text" class="form-control" name="name" id="name" autocomplete="off"
+                formControlName="name">
+              <mat-icon matSuffix>search</mat-icon>
+            </div>
+            <div class="col-md-3">
+              <label for="pn" class="form-label">PN </label>
+              <input type="text" class="form-control" name="pn" id="pn" autocomplete="off" formControlName="pn">
+              <mat-icon matSuffix>search</mat-icon>
+            </div>
+            <div class="col-md-3">
+              <label for="sn" class="form-label">SN </label>
+              <input type="text" class="form-control" name="sn" id="sn" autocomplete="off" formControlName="sn">
+              <mat-icon matSuffix>search</mat-icon>
+            </div>
+            <div class="col-md-3">
+              <label for="ipaddress" class="form-label">IP Address </label>
+              <input type="text" class="form-control" name="ipaddress" id="ipaddress" autocomplete="off"
+                formControlName="ipaddress">
+              <mat-icon matSuffix>search</mat-icon>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="searchbtn" (click)="searchPhysicalServers()">Search</button>
+        </div>
+
+        <div *ngIf="rearchResultTable" style="margin: 20px">
+          <div>
+            <span class="searchResult createButtons"> Search Result </span>
+            <span style="float:right">
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-sliders"
+                viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                  d="M11.5 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM9.05 3a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0V3h9.05zM4.5 7a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM2.05 8a2.5 2.5 0 0 1 4.9 0H16v1H6.95a2.5 2.5 0 0 1-4.9 0H0V8h2.05zm9.45 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm-2.45 1a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0v-1h9.05z" />
+              </svg>
+            </span>
+          </div>
+          <hr style="color:grey; font-size: 10px; width: 100%;">
+
+          <mat-table #table1 [dataSource]="dataSource1" matSort>
+            <ng-container matColumnDef="action">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Action </mat-header-cell>
+              <mat-cell *matCellDef="let element" class="action-link" style="text-align: center;">
+                <input type="image" *ngIf="isLocActive != false" class="inputImage" ng-disable src="assets/images/edit.png" [disabled]="element.pending_Approval" style="cursor: pointer;" (click)="editPhyServ(element)" data-bs-toggle="modal" [attr.data-bs-target]="element.pending_Approval ? '#pendingForApprovalModal' : '#staticBackdrop11'">
+                <input type="image" *ngIf="isLocActive != false" class="inputImage" src="assets/images/delete.png" [disabled]="element.pending_Approval" style="margin-left: 5px;cursor: pointer;"
+                data-bs-toggle="modal" [attr.data-bs-target]="element.pending_Approval ? '#pendingForApprovalModal' : '#staticBackdrop2'"
+                (click)="deletePhysicalServer(element)">
+
+                <img src="assets/images/edit.png" *ngIf="isLocActive == false">
+                <img src="assets/images/delete.png" style="margin-left: 5px;" *ngIf="isLocActive == false">
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cid">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.operatingSystem.osName}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="clocation">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Location </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.category.name}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="ccategory">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Category </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.category.name}} </mat-cell>
+            </ng-container>
+
+
+            <ng-container matColumnDef="cosVersion">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> OS & Version </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.operatingSystem.osName}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cname">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cpn">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> PN </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.pn}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="csn">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> SN </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.sn}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cipAddr">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> IP Address </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.ipAddress}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cram">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> RAM (GB) </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.ram}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="chdd">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> HDD (GB) </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.hdd}} </mat-cell>
+            </ng-container>
+
+
+            <ng-container matColumnDef="ccpu">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> CPU </mat-header-cell>
+              <mat-cell *matCellDef="let element" > {{element.cpu}} </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns1"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns1;" [ngClass]="row.pending_Approval ? 'greyedOut' : ''"></mat-row>
+          </mat-table>
+
+          <mat-paginator class="customPaginator" [length]="totalRows" [pageIndex]="currentPage" [pageSize]="pageSize"
+            [pageSizeOptions]="pageSizeOptions" showFirstLastButtons (page)="pageChanged($event)">
+          </mat-paginator>
+
+          <div class="col d-flex align-items-center justify-content-center">
+            <img src="../../../assets/images/loading1.png" alt="" class="loader" *ngIf="isLoading">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="SearchUserTxt">Create Physical Servers</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="clearFormOnCancel()">
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="row g-3" [formGroup]="createPhysicalServerForm" id="createPhysicalServers"
+            (ngSubmit)="savePhysicalServers()">
+            <div class="col-md-3 colBottoMargin">
+              <label for="cCategory" class="form-label">Category <span class="starMandate">*</span> </label>
+
+              <select name="cCategory" id="cCategory" class="form-select dropdown-toggle" formControlName="cCategory"
+                >
+                <option *ngFor="let category of categories" [value]="category.id"> {{ category.name }} </option>
+              </select>
+              <div class="text-error-msg-block">
+                <small *ngIf="!cCategory.valid && cCategory.touched" class="validationMessage"> Category cannot be left
+                  blank
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="cOsVersion" class="form-label">OS & Version <span class="starMandate">*</span> </label>
+
+              <select name="cOsVersion" id="cOsVersion" class="form-select dropdown-toggle" formControlName="cOsVersion"
+                >
+                <option *ngFor="let cOsVersion of osVersions" [value]="cOsVersion.id"> {{ cOsVersion.osName + ' ' + cOsVersion.osVersion }} </option>
+              </select>
+              <div class="text-error-msg-block">
+                <small *ngIf="!cOsVersion.valid && cOsVersion.touched" class="validationMessage"> Os & Version cannot be
+                  left blank
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="cPatchingDay" class="form-label">Patching Day <span class="starMandate">*</span></label>
+              <select name="cPatchingDay" id="cPatchingDay" class="form-select dropdown-toggle"
+                formControlName="cPatchingDay" >
+                <option *ngFor="let cPatchingDay of patchingDays" [value]="cPatchingDay.id"> {{ weekDay[cPatchingDay.dayOfWeek] + ' ' + cPatchingDay.timeOfDay + ' ' + cPatchingDay.timeZone }} </option>
+              </select>
+              <div class="text-error-msg-block">
+                <small *ngIf="!cPatchingDay.valid && cPatchingDay.touched" class="validationMessage"> Patching Day cannot
+                  be left blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="cCServerUser" class="form-label">CC Server User <span class="starMandate">*</span></label>
+              <select name="cCServerUser" id="cCServerUser" class="form-select dropdown-toggle" formControlName="cCServerUser"
+              name="">
+              <option *ngFor="let ccServer of CCServerUserDropdown" [value]="ccServer.name"> {{ ccServer.name }} </option>
+            </select>
+                <!-- <input type="text" class="form-control" name="cCServerUser" id="cCServerUser" autocomplete="off" -->
+               <div class="text-error-msg-block">
+                <small *ngIf="!cCServerUser.valid && cCServerUser.touched" class="validationMessage"> CC Server User
+                  cannot be left blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3 colBottoMargin">
+              <label for="cName" class="form-label">Name <span class="starMandate">*</span></label>
+              <input type="text" class="form-control" name="cName" id="cName" autocomplete="off" formControlName="cName">
+              <div class="text-error-msg-block">
+                <small *ngIf="!cName.valid && cName.touched" class="validationMessage"> Name cannot be left
+                  blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3 colBottoMargin">
+              <label for="cPurpose" class="form-label">Purpose <span class="starMandate">*</span></label>
+              <input type="text" class="form-control" name="cPurpose" id="cPurpose" autocomplete="off" formControlName="cPurpose">
+              <div class="text-error-msg-block">
+                <small *ngIf="!cPurpose.valid && cPurpose.touched" class="validationMessage"> Purpose cannot be left
+                  blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="cPns" class="form-label">PN <span class="starMandate">*</span></label>
+              <input type="text" class="form-control" name="cPns" id="cPns" autocomplete="off" formControlName="cPns">
+              <div class="text-error-msg-block">
+                <small *ngIf="!cPns.valid && cPns.touched" class="validationMessage"> PN cannot be left
+                  blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="cSn" class="form-label">SN <span class="starMandate">*</span></label>
+              <input type="text" class="form-control" name="cSn" id="cSn" autocomplete="off" formControlName="cSn">
+              <div class="text-error-msg-block">
+                <small *ngIf="!cSn.valid && cSn.touched" class="validationMessage"> SN cannot be left
+                  blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="cModel" class="form-label"> Model <span class="starMandate">*</span></label>
+              <input type="text" class="form-control" name="cModel" id="cModel" autocomplete="off"
+                formControlName="cModel">
+              <div class="text-error-msg-block">
+                <small *ngIf="!cModel.valid && cModel.touched" class="validationMessage"> Model cannot be left
+                  blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3 colBottoMargin">
+              <label for="cCarePackSaid" class="form-label"> Care Pack Said <span class="starMandate">*</span></label>
+              <input type="text" class="form-control" name="cCarePackSaid" id="cCarePackSaid" autocomplete="off"
+                formControlName="cCarePackSaid">
+              <div class="text-error-msg-block">
+                <small *ngIf="!cCarePackSaid.valid && cCarePackSaid.touched" class="validationMessage"> Care Pack Said
+                  cannot be left
+                  blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="cValidUntil" class="form-label"> Valid Until <span class="starMandate">*</span></label>
+              <input type="date" class="form-control" name="cValidUntil" id="cValidUntil" autocomplete="off"
+                formControlName="cValidUntil" placeholder="">
+              <div class="text-error-msg-block">
+                <small *ngIf="!cValidUntil.valid && cValidUntil.touched" class="validationMessage"> Valid Until cannot be
+                  left
+                  blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="cIpAddress" class="form-label"> IP Address <span class="starMandate">*</span></label>
+              <input type="text" class="form-control" name="cIpAddress" id="cIpAddress" autocomplete="off"
+                formControlName="cIpAddress">
+              <div class="text-error-msg-block">
+                <small *ngIf="!cIpAddress.valid && cIpAddress.touched" class="validationMessage"> IP Address cannot be
+                  left
+                  blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="cIloIp" class="form-label"> ILOIP <span class="starMandate">*</span></label>
+              <input type="text" class="form-control" name="cIloIp" id="cIloIp" autocomplete="off"
+                formControlName="cIloIp">
+              <div class="text-error-msg-block">
+                <small *ngIf="!cIloIp.valid && cIloIp.touched" class="validationMessage"> ILOIP field cannot be
+                  left
+                  blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3 colBottoMargin">
+              <label for="cCpu" class="form-label"> CPU <span class="starMandate">*</span></label>
+              <input type="text" class="form-control" name="cCpu" id="cCpu" autocomplete="off" formControlName="cCpu">
+              <div class="text-error-msg-block">
+                <small *ngIf="!cCpu.valid && cCpu.touched" class="validationMessage"> CPU field cannot be left
+                  blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="cHdd" class="form-label"> HDD (GB) <span class="starMandate">*</span></label>
+              <input type="number" class="form-control" name="cHdd" id="cHdd" autocomplete="off" formControlName="cHdd">
+              <div class="text-error-msg-block">
+                <small *ngIf="!cHdd.valid && cHdd.touched" class="validationMessage"> HDD field cannot be left
+                  blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="cRam" class="form-label"> RAM (GB) <span class="starMandate">*</span></label>
+              <input type="number" class="form-control" name="cRam" id="cRam" autocomplete="off" formControlName="cRam">
+              <div class="text-error-msg-block">
+                <small *ngIf="!cRam.valid && cRam.touched" class="validationMessage"> RAM field cannot be left
+                  blank.
+                </small>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <div class="createServersButtons">
+            <button class="discardbtn" type="button" id="discard" (click)="clearFormOnCancel()"  data-bs-dismiss="modal" aria-label="Close">Discard</button>
+            <button class="searchbtn" type="button" data-bs-dismiss="modal" aria-label="Close" [disabled]="!createPhysicalServerForm.valid" (click)="savePhysicalServers()">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="staticBackdrop11" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="SearchUserTxt">Update Physical Servers</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="clearFormOnCancel()">
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="row g-3" [formGroup]="createPhysicalServerForm" id="createPhysicalServers"
+            (ngSubmit)="savePhysicalServers()">
+            <div class="col-md-3 colBottoMargin">
+              <label for="cCategory" class="form-label">Category <span class="starMandate">*</span> </label>
+
+              <select name="cCategory" id="cCategory" class="form-select dropdown-toggle" formControlName="cCategory"
+                >
+                <option *ngFor="let category of categories" [value]="category.id"> {{ category.name }} </option>
+              </select>
+              <div class="text-error-msg-block">
+                <small *ngIf="!cCategory.valid && cCategory.touched" class="validationMessage"> Category cannot be left
+                  blank
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="cOsVersion" class="form-label">OS & Version <span class="starMandate">*</span> </label>
+
+              <select name="cOsVersion" id="cOsVersion" class="form-select dropdown-toggle" formControlName="cOsVersion"
+                >
+                <option *ngFor="let cOsVersion of osVersions" [value]="cOsVersion.id"> {{ cOsVersion.osName + ' ' + cOsVersion.osVersion }} </option>
+              </select>
+              <div class="text-error-msg-block">
+                <small *ngIf="!cOsVersion.valid && cOsVersion.touched" class="validationMessage"> Os & Version cannot be
+                  left blank
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="cPatchingDay" class="form-label">Patching Day <span class="starMandate">*</span></label>
+              <select name="cPatchingDay" id="cPatchingDay" class="form-select dropdown-toggle"
+                formControlName="cPatchingDay" >
+                <option *ngFor="let cPatchingDay of patchingDays" [value]="cPatchingDay.id"> {{ weekDay[cPatchingDay.dayOfWeek] + ' ' + cPatchingDay.timeOfDay + ' ' + cPatchingDay.timeZone }} </option>
+              </select>
+              <div class="text-error-msg-block">
+                <small *ngIf="!cPatchingDay.valid && cPatchingDay.touched" class="validationMessage"> Patching Day cannot
+                  be left blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="cCServerUser" class="form-label">CC Server User <span class="starMandate">*</span></label>
+              <select name="cCServerUser" id="cCServerUser" class="form-select dropdown-toggle" formControlName="cCServerUser"
+              name="">
+              <option *ngFor="let ccServer of CCServerUserDropdown" [value]="ccServer.name"> {{ ccServer.name }} </option>
+            </select>
+              <div class="text-error-msg-block">
+                <small *ngIf="!cCServerUser.valid && cCServerUser.touched" class="validationMessage"> CC Server User
+                  cannot be left blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3 colBottoMargin">
+              <label for="cName" class="form-label">Name <span class="starMandate">*</span></label>
+              <input type="text" class="form-control" name="cName" id="cName" autocomplete="off" formControlName="cName">
+              <div class="text-error-msg-block">
+                <small *ngIf="!cName.valid && cName.touched" class="validationMessage"> Name cannot be left
+                  blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3 colBottoMargin">
+              <label for="cPurpose" class="form-label">Purpose <span class="starMandate">*</span></label>
+              <input type="text" class="form-control" name="cPurpose" id="cPurpose" autocomplete="off" formControlName="cPurpose">
+              <div class="text-error-msg-block">
+                <small *ngIf="!cPurpose.valid && cPurpose.touched" class="validationMessage"> Purpose cannot be left
+                  blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="cPns" class="form-label">PN <span class="starMandate">*</span></label>
+              <input type="text" class="form-control" name="cPns" id="cPns" autocomplete="off" formControlName="cPns">
+              <div class="text-error-msg-block">
+                <small *ngIf="!cPns.valid && cPns.touched" class="validationMessage"> PN cannot be left
+                  blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="cSn" class="form-label">SN <span class="starMandate">*</span></label>
+              <input type="text" class="form-control" name="cSn" id="cSn" autocomplete="off" formControlName="cSn">
+              <div class="text-error-msg-block">
+                <small *ngIf="!cSn.valid && cSn.touched" class="validationMessage"> SN cannot be left
+                  blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="cModel" class="form-label"> Model <span class="starMandate">*</span></label>
+              <input type="text" class="form-control" name="cModel" id="cModel" autocomplete="off"
+                formControlName="cModel">
+              <div class="text-error-msg-block">
+                <small *ngIf="!cModel.valid && cModel.touched" class="validationMessage"> Model cannot be left
+                  blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3 colBottoMargin">
+              <label for="cCarePackSaid" class="form-label"> Care Pack Said <span class="starMandate">*</span></label>
+              <input type="text" class="form-control" name="cCarePackSaid" id="cCarePackSaid" autocomplete="off"
+                formControlName="cCarePackSaid">
+              <div class="text-error-msg-block">
+                <small *ngIf="!cCarePackSaid.valid && cCarePackSaid.touched" class="validationMessage"> Care Pack Said
+                  cannot be left
+                  blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="cValidUntil" class="form-label"> Valid Until <span class="starMandate">*</span></label>
+              <input type="date" class="form-control" name="cValidUntil" id="cValidUntil" autocomplete="off"
+                formControlName="cValidUntil" placeholder="">
+              <div class="text-error-msg-block">
+                <small *ngIf="!cValidUntil.valid && cValidUntil.touched" class="validationMessage"> Valid Until cannot be
+                  left
+                  blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="cIpAddress" class="form-label"> IP Address <span class="starMandate">*</span></label>
+              <input type="text" class="form-control" name="cIpAddress" id="cIpAddress" autocomplete="off"
+                formControlName="cIpAddress">
+              <div class="text-error-msg-block">
+                <small *ngIf="!cIpAddress.valid && cIpAddress.touched" class="validationMessage"> IP Address cannot be
+                  left
+                  blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="cIloIp" class="form-label"> ILOIP <span class="starMandate">*</span></label>
+              <input type="text" class="form-control" name="cIloIp" id="cIloIp" autocomplete="off"
+                formControlName="cIloIp">
+              <div class="text-error-msg-block">
+                <small *ngIf="!cIloIp.valid && cIloIp.touched" class="validationMessage"> ILOIP field cannot be
+                  left
+                  blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3 colBottoMargin">
+              <label for="cCpu" class="form-label"> CPU <span class="starMandate">*</span></label>
+              <input type="text" class="form-control" name="cCpu" id="cCpu" autocomplete="off" formControlName="cCpu">
+              <div class="text-error-msg-block">
+                <small *ngIf="!cCpu.valid && cCpu.touched" class="validationMessage"> CPU field cannot be left
+                  blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="cHdd" class="form-label"> HDD (GB) <span class="starMandate">*</span></label>
+              <input type="number" class="form-control" name="cHdd" id="cHdd" formControlName="cHdd">
+              <div class="text-error-msg-block">
+                <small *ngIf="!cHdd.valid && cHdd.touched" class="validationMessage"> HDD field cannot be left
+                  blank.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="cRam" class="form-label"> RAM (GB)<span class="starMandate">*</span></label>
+              <input type="number" class="form-control" name="cRam" id="cRam" autocomplete="off" formControlName="cRam">
+              <div class="text-error-msg-block">
+                <small *ngIf="!cRam.valid && cRam.touched" class="validationMessage"> RAM field cannot be left
+                  blank.
+                </small>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <div class="createServersButtons">
+            <button class="discardbtn" type="button" id="discard" (click)="clearFormOnCancel()"  data-bs-dismiss="modal" aria-label="Close">Discard</button>
+            <button class="searchbtn" type="button" data-bs-dismiss="modal" aria-label="Close" [disabled]="!createPhysicalServerForm.valid" (click)="updatePhysicalServers()">update</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+         <div class="modal-title fs-5 m-auto" id="staticBackdropLabel">
+             <svg xmlns="http://www.w3.org/2000/svg" width="112" height="112" fill="#FEA500" class="bi bi-exclamation-circle mt-4 popupImage" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+              </svg>
+          </div>
+        <div class="modal-body m-auto">
+          <p class="popupSubHeadingText">Are you sure?</p>
+          <p class="popupBodyTextMsg">You want to delete the Physical Server</p>
+          <p class="popupBodyTextMsg" *ngIf="this.deleteNoteVisibility">{{ constantMessage.deleteNote }}</p>
+        </div>
+        <div class="m-auto pb-5">
+          <button type="button" class="btn popupCancelButton" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn popupConfirmButton" data-bs-dismiss="modal" (click)="deletePopupConfirmButton()">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="pendingForApprovalModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+         <div class="modal-title fs-5 m-auto" id="staticBackdropLabel">
+             <svg xmlns="http://www.w3.org/2000/svg" width="112" height="112" fill="#FEA500" class="bi bi-exclamation-circle mt-4 popupImage" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+              </svg>
+          </div>
+        <div class="modal-body m-auto">
+          <p class="popupBodyTextMsg">{{ constantMessage.editNote }}</p>
+        </div>
+        <div class="m-auto pb-5">
+          <button type="button" class="btn popupCancelButton" data-bs-dismiss="modal">Close</button>
+          </div>
+      </div>
+    </div>
+  </div>
+
+
+

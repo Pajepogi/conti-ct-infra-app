@@ -1,0 +1,15 @@
+<div class="headerwrapper">
+    <header class="col-xs-12" role="header">
+        <div class="left-content">
+            <div id="logo" class="logo">
+                <img class="logo-img" src="assets/images/logo1.png">
+            </div>
+        </div>
+        <div class="right-content">
+            <img class="mail-img" src="assets/images/mail.png" (click)="openDialogContact()">
+            <img class="notify-img"src="assets/images/notif.png" style="cursor: pointer;">
+            <mat-icon class="notify-img" matBadge="{{ count | async }}"  matBadgeColor="warn" (click)="openDialog()" *ngIf="NotificationCount">bell</mat-icon>
+            <img class="profile-img" src="assets/images/user-profile.png">
+        </div>
+    </header>
+</div>

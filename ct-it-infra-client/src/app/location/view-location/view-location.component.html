@@ -1,0 +1,98 @@
+<div class="location-container">
+    <div class="form-container-box">
+        <div class="list-heading left-section">
+            Locations
+        </div>
+        <div class="section">
+            <div class="right-section">
+            
+            </div>
+        </div>
+        <hr>
+        <form [formGroup]="viewLocationForm" id="viewLoc">
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <label for="locationcode" class="form-label">Location Code <span class="validtar">*</span></label>
+                    <input type="text" class="form-control" formControlName="locationCode" id="locationcode">
+                </div>
+                <div class="col-md-3">
+                    <label for="locationname" class="form-label">Location Name<span class="validtar">*</span></label>
+                    <input type="text" class="form-control" formControlName="locationName" id="locationname">
+                </div>
+                <div class="col-md-6">
+                    <label for="locationAddress" class="form-label">Location Address<span class="validtar">*</span></label>
+                    <input type="text" class="form-control" formControlName="locationAddress" id="locationAddress">
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <label for="ldapdomain" class="form-label">LDAP Domain<span class="validtar">*</span></label>
+                    <input type="text" class="form-control" formControlName="locationAddress" id="locationAddress">
+                </div>
+                <div class="col-md-3">
+                    <label for="ldapcontainer" class="form-label">LDAP Container<span class="validtar">*</span></label>
+                    <input type="text" class="form-control" formControlName="ldapContainer" id="ldapcontainer">
+                </div>
+                <div class="col-md-3">
+                    <label for="region" class="form-label">Region<span class="validtar">*</span></label>
+                    <input type="text" class="form-control" formControlName="region" id="region">
+                    </div>
+                <div class="col-md-3">
+                    <label for="country" class="form-label">Country<span class="validtar">*</span></label>
+                    <input type="text" class="form-control" formControlName="country" id="country">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="cunumber" class="form-label">CU Number <span class="validtar">*</span></label>
+                    <input type="text" class="form-control" formControlName="cuNumber" id="cunumber">
+                </div>
+                <div class="col-md-3">
+                    <label for="ccnumber" class="form-label">CC Number<span class="validtar">*</span></label>
+                    <input type="text" class="form-control" formControlName="ccNumber" id="ccnumber">
+                </div>
+                <div class="col-md-3">
+                    <label for="timezone" class="form-label" id="custom">Timezone<span class="validtar">*</span></label>
+                    <input type="text" class="form-control" formControlName="timezone" id="timezone">
+                </div>
+                <div class="col-md-3">
+                    <label for="bmcgroup" class="form-label">BMC Group<span class="validtar">*</span></label>
+                    <input type="text" class="form-control" formControlName="bmcGroup" id="bmcgroup">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="technical-contact" *ngIf="locationId">
+    <app-technical-contacts [locationId]="locationId" [isLocActive]="isLocActive"></app-technical-contacts>
+</div>
+<div class="physical-server" *ngIf="locationId">
+    <app-physical-servers [locationId]="locationId" [isLocActive]="isLocActive"></app-physical-servers>
+</div>
+<div class="virtual-server" *ngIf="locationId">
+    <app-virtual-servers [locationId]="locationId" [isLocActive]="isLocActive"></app-virtual-servers>
+</div>
+<div class="physical-storages" *ngIf="locationId">
+    <app-physical-storages [locationId]="locationId" [isLocActive]="isLocActive"></app-physical-storages>
+</div>
+<div class="subnets" *ngIf="locationId">
+    <app-subnets [locationId]="locationId" [isLocActive]="isLocActive"></app-subnets>
+</div>
+<div class="switches" *ngIf="locationId">
+    <app-switches [locationId]="locationId" [locName]="locName" [isLocActive]="isLocActive"></app-switches>
+</div>
+<div class="tape-unit" *ngIf="locationId">
+    <app-tape-unit [locationId]="locationId" [locName]="locName" [isLocActive]="isLocActive"></app-tape-unit>
+</div>
+<div class="disk-backup" *ngIf="locationId">
+    <app-disk-backup [locationId]="locationId" [locName]="locName" [isLocActive]="isLocActive"></app-disk-backup>
+</div>
+<div class="cloud-storage" *ngIf="locationId">
+    <app-cloud-storage [locationId]="locationId" [locName]="locName" [isLocActive]="isLocActive"></app-cloud-storage>
+</div>
+<div class="cloud-storage-container" *ngIf="locationId">
+    <app-cloud-storage-containers [locationId]="locationId" [locName]="locName" [isLocActive]="isLocActive"></app-cloud-storage-containers>
+</div>

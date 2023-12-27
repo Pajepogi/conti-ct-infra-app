@@ -1,0 +1,119 @@
+.content-wrapper {
+    height: calc(100vh - 65px - 59px);
+}
+
+.content-wrapper mat-sidenav-container {
+    height: 100%;
+    width: 161px;
+    float: left;
+    background: #000000 0% 0% no-repeat padding-box;
+}
+
+.content-wrapper .mat-drawer {
+    background: #000000 0% 0% no-repeat padding-box;
+}
+
+.content-wrapper mat-list-item {
+    font: normal normal 300 13px/18px Nunito Sans-Light;
+    letter-spacing: 0px;
+    color: #F0F0F0;
+}
+
+.mat-list-item-content {
+    padding-left: 24px;
+}
+
+.content-wrapper mat-sidenav {
+    position: relative;
+}
+
+.right-content {
+    margin-left: 161px;
+    background: #F0F0F0 0% 0% no-repeat padding-box;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.content-wrapper .mat-list-base {
+    padding-top: 0px;
+}
+
+.content-wrapper .mat-list-item.active {
+    background: #FEA500 0% 0% no-repeat padding-box;
+    border-radius: 0px 13px 13px 0px;
+    width: 143px;
+}
+
+.icon-text {
+    padding-left: 11px;
+}
+
+.content-wrapper .mat-list-item.active img {
+    filter: invert(1);
+}
+
+.content-wrapper .mat-list-item.active .icon-text {
+    color: #000000;
+}
+
+.content-wrapper .mat-list-item.active img.location-icon {
+    filter: none !important;
+}
+
+mat-sidenav,
+mat-nav-list {
+    overflow: hidden;
+}
+
+.mat-list-item {
+    height: 38px !important;
+}
+
+
+
+.mat-list-item.log {
+    margin-bottom: -40px;
+}
+
+.mat-expansion-panel-header {
+    background-color: #000;
+    color: #fff;
+    font-size: 13px;
+    padding: 0px 16px;
+}
+
+.mat-expansion-panel-header {
+    background: #000;
+    height: 39px;
+    margin-left: -1px;
+    margin-right: 16px;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+    color: #fff;
+    width: 143px;
+}
+
+#settingTab {
+    background-color: #000 !important;
+}
+
+.mat-expansion-indicator,
+.mat-expansion-indicator:after {
+    color: white !important;
+}
+
+.activeClass {
+    background-color: #FFA500;
+    color: #000
+}
+
+.activeClass:hover {
+    background-color: #FFA500 !important;
+}
+
+.inActiveClass {
+    background-color: #000;
+    color: #fff
+}
